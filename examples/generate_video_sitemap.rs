@@ -31,12 +31,12 @@ fn main() {
             )),
             Some(true),
             Some(Restriction::new(
-                vec![
+                HashSet::from([
                     String::from("IE"),
                     String::from("GB"),
                     String::from("US"),
                     String::from("CA"),
-                ],
+                ]),
                 Relationship::Allow,
             )),
             Some(Platform::new(

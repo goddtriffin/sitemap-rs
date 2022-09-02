@@ -379,7 +379,7 @@ impl Video {
 /// Note that this tag only affects search results; it doesn't prevent a user from finding or playing your video in a restricted location though other means.
 pub struct Restriction {
     /// Specify a space-delimited list of country codes in ISO 3166 format.
-    pub country_codes: Vec<String>,
+    pub country_codes: HashSet<String>,
 
     /// Whether the video is allowed or denied in search results in the specified countries.
     /// Supported values are allow or deny.
@@ -389,7 +389,7 @@ pub struct Restriction {
 
 impl Restriction {
     #[must_use]
-    pub fn new(country_codes: Vec<String>, relationship: Relationship) -> Self {
+    pub const fn new(country_codes: HashSet<String>, relationship: Relationship) -> Self {
         Self {
             country_codes,
             relationship,
@@ -406,7 +406,7 @@ impl Restriction {
         restriction.add_attribute("relationship", self.relationship.as_str());
 
         // set text as space-delimited country codes in ISO 3166 format
-        let country_codes: String = self.country_codes.join(" ");
+        let country_codes: String = self.country_codes.into_iter().collect::<Vec<_>>().join(" ");
         restriction.add_text(country_codes)?;
 
         Ok(restriction)

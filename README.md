@@ -255,8 +255,8 @@ I haven't benchmarked `xml-builder` or its use in this library, so I cannot stat
 I originally went with `xml-builder` due to how extremely easy it is to learn and use.
 It is by far fast enough for my use-cases, so I didn't have to reach for anything else.
 
-If you like what this library provides, but simply need the ability to parse sitemaps and could also use a speed boost - please consider pushing me a pull request!
-(Preferably one that replaces `xml-builder` with `quick-xml` lol)
+If you like what this library provides, but simply need the ability to parse sitemaps and could also use a speed boost - 
+please consider pushing a pull request! (Preferably one that replaces `xml-builder` with `quick-xml` lol)
 
 #### Builder pattern
 
@@ -267,6 +267,21 @@ Not only would this make the library more ergonomic to use, but it would vastly 
 each struct initialization point).
 
 This hasn't been prioritized yet as I am currently satisfied with `::new()` for my use cases.
+Pull requests are welcome!
+
+#### Codified country codes
+
+In video sitemaps, there is a tag called `<video: restriction>` where the text is a space-delimited list of country codes
+in [ISO 3166 format](https://en.wikipedia.org/wiki/ISO_3166).
+
+Currently, the country codes are typed-hinted as merely a `HashSet<String>`.
+It would be awesome if there was an enum/struct that codified each ISO 3166 country code as a separate entity, so this 
+library could have extra assurances that each code was valid.
+
+The [isocountry-rs](https://github.com/sifton/isocountry-rs) and 
+[rust_iso_3166](https://github.com/rust-iso/rust_iso3166) libraries looks promising.
+
+This hasn't been prioritized yet as I am currently satisfied with `HashSet<String>` for my use cases.
 Pull requests are welcome!
 
 ### Commands
