@@ -1,2 +1,9 @@
-/target
-/Cargo.lock
+# directories
+.idea/
+.vscode/
+target/
+bin/
+
+# files
+.DS_Store
+Cargo.lock

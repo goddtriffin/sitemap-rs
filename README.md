@@ -52,23 +52,44 @@ The library **cannot** parse sitemaps of any kind.
 
 ### URL Sitemap
 
+`cargo run --example generate_url_sitemap`
+
 ```rust
-println!("Hello world!");
+fn main() {
+  let url: Url = Url::new(
+    String::from("http://www.example.com/"),
+    Some(DateTime::from_utc(
+      NaiveDate::from_ymd(2005, 1, 1).and_hms(9, 10, 11),
+      FixedOffset::east(0),
+    )),
+    Some(ChangeFrequency::Monthly),
+    Some(0.8),
+    None,
+    None,
+    None,
+  )
+  .expect("failed a <url> validation");
+
+  let url_set: UrlSet = UrlSet::new(vec![url]).expect("failed a <urlset> validation");
+  url_set.write_to_file(PathBuf::from("./target/sitemap.xml")).unwrap();
+}
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://www.toddgriffin.me/</loc>
-        <lastmod>2022-07-28T19:11:34Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
+  <url>
+    <loc>http://www.example.com/</loc>
+    <lastmod>2005-01-01T09:10:11+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
 ```
 
 ### Index Sitemap
+
+`cargo run --example generate_index_sitemap`
 
 ```rust
 println!("Hello world!");
@@ -88,6 +109,8 @@ println!("Hello world!");
 
 ### Image Sitemap
 
+`cargo run --example generate_image_sitemap`
+
 ```rust
 println!("Hello world!");
 ```
@@ -106,6 +129,8 @@ println!("Hello world!");
 
 ### Video Sitemap
 
+`cargo run --example generate_video_sitemap`
+
 ```rust
 println!("Hello world!");
 ```
@@ -123,6 +148,8 @@ println!("Hello world!");
 ```
 
 ### News Sitemap
+
+`cargo run --example generate_news_sitemap`
 
 ```rust
 println!("Hello world!");
@@ -212,7 +239,7 @@ println!("Hello world!");
 
 ## Developers
 
-**Project is under active maintenance - even if there are no recent commits! Please submit an issue / bug request if you the library needs updating for any reason!**
+**Project is under active maintenance - even if there are no recent commits! Please submit an issue / bug request if the library needs updating for any reason!**
 
 Built with: `Rust 1.63`
 
@@ -220,7 +247,7 @@ Built with: `Rust 1.63`
 
 I would love to have this library use [quick-xml](https://github.com/tafia/quick-xml) instead of [xml-builder](https://github.com/cocool97/xml-builder).
 
-The `quick-xml` library is built for speed and it supports not only writing files, but reading them too.
+The `quick-xml` library is built for speed and supports not only writing files, but reading them too.
 I haven't benchmarked `xml-builder` or its use in this library, so I cannot state the impact `quick-xml` will have there.
 
 I originally went with `xml-builder` due to how extremely easy it is to learn and use.
