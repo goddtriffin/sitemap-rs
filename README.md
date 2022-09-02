@@ -4,7 +4,8 @@
 
 ### Generates sitemaps
 
-- [URL sitemaps and Index sitemaps](https://www.sitemaps.org/protocol.html)
+- [URL sitemaps](https://www.sitemaps.org/protocol.html)
+- [Index sitemaps](https://www.sitemaps.org/protocol.html)
 - [Image sitemaps](https://developers.google.com/search/docs/advanced/sitemaps/image-sitemaps)
 - [Video sitemaps](https://developers.google.com/search/docs/advanced/sitemaps/video-sitemaps)
 - [News sitemaps](https://developers.google.com/search/docs/advanced/sitemaps/news-sitemap)
@@ -21,27 +22,27 @@ problems.
 
 - URL Sitemap
   - `TooManyUrls`
-    - A `<urlset>` can only hold as many as `50,000` `<url>`.
+    - Can only contain as many as `50,000` `<url>`.
   - `TooMuchNews`
-    - A `<urlset>` can only hold as many as `1,000` `<news: news>`.
+    - Can only contain as many as `1,000` `<news: news>`.
   - `PriorityTooLow` and `PriorityTooHigh`
-    - A `<url>`'s `<priority>` must be between `0.0` and `1.0` (inclusive).
+    - A `<priority>` must be between `0.0` and `1.0` (inclusive).
   - `TooManyImages`
-    - A `<url>` can only hold as many as `1,000` `<image: image>`.
+    - Can only contain as many as `1,000` `<image: image>`.
 - Index Sitemap
   - `TooManySitemaps`
-    - A `<sitemapindex>` can only hold as many as `50,000` `<sitemap>`.
+    - Can only contain as many as `50,000` `<sitemap>`.
 - Video Sitemap
   - `DescriptionTooLong`
-    - A `<video: video>`'s `<description>` must be no longer than `2048` characters.
+    - A `<description>` must be no longer than `2048` characters.
   - `DurationTooShort` and `DurationTooLong`
-    - A `<video: video>`'s `<duration>` must be between `1` and `28,800` seconds (inclusive).
+    - A `<duration>` must be between `1` and `28,800` seconds (inclusive).
   - `RatingTooLow` and `RatingTooHigh`
-    - A `<video: video>`'s `<rating>` must be between `0.0` and `5.0` (inclusive).
+    - A `<rating>` must be between `0.0` and `5.0` (inclusive).
   - `UploaderNameTooLong`
-    - A `<video: video>`'s `<uploader>`'s `<name>` must be no longer than `255` characters.
+    - An `<uploader>`'s `<name>` must be no longer than `255` characters.
   - `TooManyTags`
-    - A `<video: video>` must contain no more than `32` `<tag>`.
+    - Must contain no more than `32` `<tag>`.
 
 ## Restrictions
 
