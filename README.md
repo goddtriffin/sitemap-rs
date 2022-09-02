@@ -54,29 +54,6 @@ The library **cannot** parse sitemaps of any kind.
 
 `cargo run --example generate_url_sitemap`
 
-```rust
-fn main() {
-  let url: Url = Url::new(
-    String::from("http://www.example.com/"),
-    Some(DateTime::from_utc(
-      NaiveDate::from_ymd(2005, 1, 1).and_hms(9, 10, 11),
-      FixedOffset::east(0),
-    )),
-    Some(ChangeFrequency::Monthly),
-    Some(0.8),
-    None,
-    None,
-    None,
-  )
-  .expect("failed a <url> validation");
-
-  let url_set: UrlSet = UrlSet::new(vec![url]).expect("failed a <urlset> validation");
-  url_set
-    .write_to_file(PathBuf::from("./target/url-sitemap.xml"))
-    .unwrap();
-}
-```
-
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -93,10 +70,6 @@ fn main() {
 
 `cargo run --example generate_index_sitemap`
 
-```rust
-println!("Hello world!");
-```
-
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -112,43 +85,6 @@ println!("Hello world!");
 ### Image Sitemap
 
 `cargo run --example generate_image_sitemap`
-
-```rust
-fn main() {
-  let urls: Vec<Url> = vec![
-    Url::new(
-      String::from("http://example.com/sample1.html"),
-      None,
-      None,
-      None,
-      Some(vec![
-        Image::new(String::from("http://example.com/image.jpg")),
-        Image::new(String::from("http://example.com/photo.jpg")),
-      ]),
-      None,
-      None,
-    )
-    .expect("failed a <url> validation"),
-    Url::new(
-      String::from("http://example.com/sample2.html"),
-      None,
-      None,
-      None,
-      Some(vec![Image::new(String::from(
-        "http://example.com/picture.jpg",
-      ))]),
-      None,
-      None,
-    )
-    .expect("failed a <url> validation"),
-  ];
-
-  let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
-  url_set
-    .write_to_file(PathBuf::from("./target/image-sitemap.xml"))
-    .unwrap();
-}
-```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -175,29 +111,40 @@ fn main() {
 
 `cargo run --example generate_video_sitemap`
 
-```rust
-println!("Hello world!");
-```
-
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://www.toddgriffin.me/</loc>
-        <lastmod>2022-07-28T19:11:34Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>http://www.example.com/videos/some_video_landing_page.html</loc>
+    <video:video>
+      <video:thumbnail_loc>http://www.example.com/thumbs/123.jpg</video:thumbnail_loc>
+      <video:title>Grilling steaks for summer</video:title>
+      <video:description>Alkis shows you how to get perfectly done steaks every time</video:description>
+      <video:content_loc>http://streamserver.example.com/video123.mp4</video:content_loc>
+      <video:player_loc>http://www.example.com/videoplayer.php?video=123</video:player_loc>
+      <video:duration>600</video:duration>
+      <video:expiration_date>2021-11-05T19:20:30+08:00</video:expiration_date>
+      <video:rating>4.2</video:rating>
+      <video:view_count>12345</video:view_count>
+      <video:publication_date>2007-11-05T19:20:30+08:00</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+      <video:restriction relationship="allow">IE GB US CA</video:restriction>
+      <video:platform relationship="allow">web tv</video:platform>
+      <video:requires_subscription>yes</video:requires_subscription>
+      <video:uploader info="http://www.example.com/users/grillymcgrillerson">GrillyMcGrillserson</video:uploader>
+      <video:live>no</video:live>
+      <video:tag>steak</video:tag>
+      <video:tag>meat</video:tag>
+      <video:tag>summer</video:tag>
+      <video:tag>outdoor</video:tag>
+    </video:video>
+  </url>
 </urlset>
 ```
 
 ### News Sitemap
 
 `cargo run --example generate_news_sitemap`
-
-```rust
-println!("Hello world!");
-```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -289,6 +236,8 @@ Built with: `Rust 1.63`
 
 ### Feature Requests
 
+#### Reading sitemap files (+ possible speed boost)
+
 I would love to have this library use [quick-xml](https://github.com/tafia/quick-xml) instead of [xml-builder](https://github.com/cocool97/xml-builder).
 
 The `quick-xml` library is built for speed and supports not only writing files, but reading them too.
@@ -299,6 +248,17 @@ It is by far fast enough for my use-cases, so I didn't have to reach for anythin
 
 If you like what this library provides, but simply need the ability to parse sitemaps and could also use a speed boost - please consider pushing me a pull request!
 (Preferably one that replaces `xml-builder` with `quick-xml` lol)
+
+#### Builder pattern
+
+Currently, the only way to create instances of each struct is by using `::new()`.
+By implementing the [Builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) on each struct, less work has to be done
+on the library users' side as they don't have to throw in many `None` values for each optional field they don't want to use.
+Not only would this make the library more ergonomic to use, but it would vastly improve readability (specifically at 
+each struct initialization point).
+
+This hasn't been prioritized yet as I am currently satisfied with `::new()` for my use cases.
+Pull requests are welcome!
 
 ### Commands
 
