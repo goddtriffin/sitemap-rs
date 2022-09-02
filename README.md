@@ -48,7 +48,7 @@ problems.
 
 ## Restrictions
 
-The library **cannot** parse sitemaps of any kind.
+This library **cannot** parse sitemaps of any kind (yet! - pull requests welcome! See Feature Requests section below).
 
 ## Examples
 
