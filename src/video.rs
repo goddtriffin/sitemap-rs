@@ -1,6 +1,7 @@
 use crate::video_error::VideoError;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
 use chrono::{DateTime, FixedOffset};
+use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
 use xml_builder::{XMLElement, XMLError};
 
@@ -437,7 +438,7 @@ impl Display for Relationship {
 ///
 /// Note that this only affects search results on the specified device types; it does not prevent a user from playing your video on a restricted platform.
 pub struct Platform {
-    pub platforms: Vec<PlatformType>,
+    pub platforms: HashSet<PlatformType>,
 
     /// Specifies whether the video is restricted or permitted for the specified platforms.
     /// Supported values are allow or deny.
@@ -447,7 +448,7 @@ pub struct Platform {
 
 impl Platform {
     #[must_use]
-    pub fn new(platforms: Vec<PlatformType>, relationship: Relationship) -> Self {
+    pub const fn new(platforms: HashSet<PlatformType>, relationship: Relationship) -> Self {
         Self {
             platforms,
             relationship,
@@ -476,6 +477,7 @@ impl Platform {
     }
 }
 
+#[derive(PartialEq, Eq, Hash)]
 pub enum PlatformType {
     /// Traditional computer browsers on desktops and laptops.
     Web,

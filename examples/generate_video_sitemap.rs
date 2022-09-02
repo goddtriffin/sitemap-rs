@@ -2,6 +2,7 @@ use chrono::{DateTime, FixedOffset, NaiveDate};
 use sitemap_rs::url::Url;
 use sitemap_rs::url_set::UrlSet;
 use sitemap_rs::video::{Platform, PlatformType, Relationship, Restriction, Uploader, Video};
+use std::collections::HashSet;
 use std::path::PathBuf;
 
 fn main() {
@@ -39,7 +40,7 @@ fn main() {
                 Relationship::Allow,
             )),
             Some(Platform::new(
-                vec![PlatformType::Web, PlatformType::Tv],
+                HashSet::from([PlatformType::Web, PlatformType::Tv]),
                 Relationship::Allow,
             )),
             Some(true),
