@@ -71,7 +71,9 @@ fn main() {
   .expect("failed a <url> validation");
 
   let url_set: UrlSet = UrlSet::new(vec![url]).expect("failed a <urlset> validation");
-  url_set.write_to_file(PathBuf::from("./target/sitemap.xml")).unwrap();
+  url_set
+    .write_to_file(PathBuf::from("./target/url-sitemap.xml"))
+    .unwrap();
 }
 ```
 
@@ -112,18 +114,60 @@ println!("Hello world!");
 `cargo run --example generate_image_sitemap`
 
 ```rust
-println!("Hello world!");
+fn main() {
+  let urls: Vec<Url> = vec![
+    Url::new(
+      String::from("http://example.com/sample1.html"),
+      None,
+      None,
+      None,
+      Some(vec![
+        Image::new(String::from("http://example.com/image.jpg")),
+        Image::new(String::from("http://example.com/photo.jpg")),
+      ]),
+      None,
+      None,
+    )
+    .expect("failed a <url> validation"),
+    Url::new(
+      String::from("http://example.com/sample2.html"),
+      None,
+      None,
+      None,
+      Some(vec![Image::new(String::from(
+        "http://example.com/picture.jpg",
+      ))]),
+      None,
+      None,
+    )
+    .expect("failed a <url> validation"),
+  ];
+
+  let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
+  url_set
+    .write_to_file(PathBuf::from("./target/image-sitemap.xml"))
+    .unwrap();
+}
 ```
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://www.toddgriffin.me/</loc>
-        <lastmod>2022-07-28T19:11:34Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>http://example.com/sample1.html</loc>
+    <image:image>
+      <image:loc>http://example.com/image.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>http://example.com/photo.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>http://example.com/sample2.html</loc>
+    <image:image>
+      <image:loc>http://example.com/picture.jpg</image:loc>
+    </image:image>
+  </url>
 </urlset>
 ```
 

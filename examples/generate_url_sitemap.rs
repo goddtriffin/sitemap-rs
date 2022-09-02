@@ -20,6 +20,6 @@ fn main() {
 
     let url_set: UrlSet = UrlSet::new(vec![url]).expect("failed a <urlset> validation");
     url_set
-        .write_to_file(PathBuf::from("./target/sitemap.xml"))
+        .write_to_file(PathBuf::from("./target/url-sitemap.xml"))
         .unwrap();
 }
