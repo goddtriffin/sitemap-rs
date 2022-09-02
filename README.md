@@ -148,13 +148,18 @@ The library **cannot** parse sitemaps of any kind.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://www.toddgriffin.me/</loc>
-        <lastmod>2022-07-28T19:11:34Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+  <url>
+    <loc>http://www.example.org/business/article55.html</loc>
+    <news:news>
+      <news:publication>
+        <news:name>The Example Times</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>2008-12-23T09:10:11+00:00</news:publication_date>
+      <news:title>Companies A, B in Merger Talks</news:title>
+    </news:news>
+  </url>
 </urlset>
 ```
 
