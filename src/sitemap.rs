@@ -3,6 +3,7 @@ use chrono::{DateTime, FixedOffset};
 use xml_builder::{XMLElement, XMLError};
 
 /// Encapsulates information about an individual Sitemap.
+#[derive(Debug)]
 pub struct Sitemap {
     /// Identifies the location of the Sitemap.
     ///

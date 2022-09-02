@@ -1,6 +1,7 @@
 use xml_builder::{XMLElement, XMLError};
 
 /// A sitemap image.
+#[derive(Debug)]
 pub struct Image {
     /// The URL of the image.
     ///

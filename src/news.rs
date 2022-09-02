@@ -3,6 +3,7 @@ use chrono::{DateTime, FixedOffset};
 use xml_builder::{XMLElement, XMLError};
 
 /// A sitemap news.
+#[derive(Debug)]
 pub struct News {
     /// The publication where the article appears.
     pub publication: Publication,
@@ -62,6 +63,7 @@ impl News {
 }
 
 /// The publication where the article appears.
+#[derive(Debug)]
 pub struct Publication {
     /// The <name> tag is the name of the news publication.
     ///

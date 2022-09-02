@@ -11,6 +11,7 @@ use xml_builder::{XMLElement, XMLError};
 pub const DEFAULT_PRIORITY: f32 = 0.5;
 
 /// A \<url\> entry within a sitemap.xml.
+#[derive(Debug)]
 pub struct Url {
     /// URL of the page.
     ///
@@ -197,7 +198,7 @@ impl Url {
 /// Please note that the value of this tag is considered a hint and not a command.
 /// Even though search engine crawlers may consider this information when making decisions, they may crawl pages marked "hourly" less frequently than that, and they may crawl pages marked "yearly" more frequently than that.
 /// Crawlers may periodically crawl pages marked "never" so that they can handle unexpected changes to those pages.
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub enum ChangeFrequency {
     /// The value "always" should be used to describe documents that change each time they are accessed.
     Always,
