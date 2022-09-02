@@ -1,5 +1,7 @@
 # sitemap-rs
 
+Library to generate URL, Index, Image, Video, and News sitemaps.
+
 ## Features
 
 ### Generates sitemaps
