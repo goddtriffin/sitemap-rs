@@ -50,6 +50,8 @@ The library **cannot** parse sitemaps of any kind.
 
 ## Examples
 
+*These examples should be exactly congruent to the examples found within the online documentation for each sitemap type.*
+
 ### URL Sitemap
 
 `cargo run --example generate_url_sitemap`
@@ -72,14 +74,16 @@ The library **cannot** parse sitemaps of any kind.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://www.toddgriffin.me/</loc>
-        <lastmod>2022-07-28T19:11:34Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
-</urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>http://www.example.com/sitemap1.xml.gz</loc>
+    <lastmod>2004-10-01T18:23:17+00:00</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>http://www.example.com/sitemap2.xml.gz</loc>
+    <lastmod>2005-01-01T00:00:00+00:00</lastmod>
+  </sitemap>
+</sitemapindex>
 ```
 
 ### Image Sitemap

@@ -15,7 +15,7 @@ fn main() {
         Some(News::new(
             Publication::new(String::from("The Example Times"), String::from("en")),
             DateTime::from_utc(
-                NaiveDate::from_ymd(2008, 12, 23).and_hms(9, 10, 11),
+                NaiveDate::from_ymd(2008, 12, 23).and_hms(0, 0, 0),
                 FixedOffset::east(0),
             ),
             String::from("Companies A, B in Merger Talks"),
