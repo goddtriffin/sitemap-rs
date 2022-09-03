@@ -47,7 +47,10 @@ fn test_constructor_priority_too_low() {
     match url_result {
         Ok(_) => panic!("Returned a URL!"),
         Err(e) => match e {
-            UrlError::PriorityTooLow(_) => (),
+            UrlError::PriorityTooLow(priority) => {
+                let expected_priority: f32 = -1.0;
+                assert!((priority - expected_priority).abs() < f32::EPSILON);
+            }
             UrlError::PriorityTooHigh(_) => panic!("Returned PriorityTooHigh!"),
             UrlError::TooManyImages(_) => panic!("Returned TooManyImages!"),
         },
@@ -69,7 +72,10 @@ fn test_constructor_priority_too_high() {
         Ok(_) => panic!("Returned a URL!"),
         Err(e) => match e {
             UrlError::PriorityTooLow(_) => panic!("Returned PriorityTooLow!"),
-            UrlError::PriorityTooHigh(_) => (),
+            UrlError::PriorityTooHigh(priority) => {
+                let expected_priority: f32 = 4.69;
+                assert!((priority - expected_priority).abs() < f32::EPSILON);
+            }
             UrlError::TooManyImages(_) => panic!("Returned TooManyImages!"),
         },
     }
@@ -100,7 +106,7 @@ fn test_constructor_too_many_images() {
         Err(e) => match e {
             UrlError::PriorityTooLow(_) => panic!("Returned PriorityTooLow!"),
             UrlError::PriorityTooHigh(_) => panic!("Returned PriorityTooHigh!"),
-            UrlError::TooManyImages(_) => (),
+            UrlError::TooManyImages(count) => assert_eq!(1001, count),
         },
     }
 }

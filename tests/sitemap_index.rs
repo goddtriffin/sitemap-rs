@@ -11,8 +11,8 @@ fn test_constructor_only_required_fields() {
         None,
     )];
 
-    let sitemap_index: Result<SitemapIndex, SitemapIndexError> = SitemapIndex::new(sitemaps);
-    assert!(sitemap_index.is_ok());
+    let sitemap_index_result: Result<SitemapIndex, SitemapIndexError> = SitemapIndex::new(sitemaps);
+    assert!(sitemap_index_result.is_ok());
 }
 
 #[test]
@@ -25,11 +25,11 @@ fn test_constructor_too_many_sitemaps() {
         ));
     }
 
-    let sitemap_result: Result<SitemapIndex, SitemapIndexError> = SitemapIndex::new(sitemaps);
-    match sitemap_result {
+    let sitemap_index_result: Result<SitemapIndex, SitemapIndexError> = SitemapIndex::new(sitemaps);
+    match sitemap_index_result {
         Ok(_) => panic!("Returned a SitemapIndex!"),
         Err(e) => match e {
-            SitemapIndexError::TooManySitemaps(_) => (),
+            SitemapIndexError::TooManySitemaps(count) => assert_eq!(50_001, count),
         },
     }
 }

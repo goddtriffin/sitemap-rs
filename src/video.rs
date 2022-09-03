@@ -11,7 +11,7 @@ use xml_builder::{XMLElement, XMLError};
 /// We recommend that your provide the <video:content_loc> tag, if possible.
 /// This is the most effective way for Google to fetch your video content files.
 /// If <video:content_loc> isn't available, provide <video:player_loc> as an alternative.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Video {
     /// A URL pointing to the video thumbnail image file.
     pub thumbnail_location: String,
@@ -378,7 +378,7 @@ impl Video {
 /// Whether to show or hide your video in search results from specific countries.
 ///
 /// Note that this tag only affects search results; it doesn't prevent a user from finding or playing your video in a restricted location though other means.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Restriction {
     /// Specify a space-delimited list of country codes in ISO 3166 format.
     pub country_codes: HashSet<String>,
@@ -415,7 +415,7 @@ impl Restriction {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub enum Relationship {
     Allow,
     Deny,
@@ -440,7 +440,7 @@ impl Display for Relationship {
 /// Whether to show or hide your video in search results on specified platform types.
 ///
 /// Note that this only affects search results on the specified device types; it does not prevent a user from playing your video on a restricted platform.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Platform {
     pub platforms: HashSet<PlatformType>,
 
@@ -481,7 +481,7 @@ impl Platform {
     }
 }
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum PlatformType {
     /// Traditional computer browsers on desktops and laptops.
     Web,
@@ -511,7 +511,7 @@ impl Display for PlatformType {
 /// The video uploader's name.
 ///
 /// Only one <video:uploader> is allowed per video.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Uploader {
     /// The string value can be a maximum of 255 characters.
     pub name: String,

@@ -66,10 +66,11 @@ impl UrlSet {
             }
 
             // check if any URLs have news
-            if url.news.is_none() {
+            if url.news.is_some() {
                 news_exists = true;
-            } else {
-                xmlns_news = Some(NEWS_NAMESPACE.to_string());
+                if xmlns_news.is_none() {
+                    xmlns_news = Some(NEWS_NAMESPACE.to_string());
+                }
             }
         }
 

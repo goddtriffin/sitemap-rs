@@ -11,7 +11,7 @@ use xml_builder::{XMLElement, XMLError};
 pub const DEFAULT_PRIORITY: f32 = 0.5;
 
 /// A \<url\> entry within a sitemap.xml.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Url {
     /// URL of the page.
     ///
