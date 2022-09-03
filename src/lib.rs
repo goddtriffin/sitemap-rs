@@ -43,13 +43,7 @@
 //! </urlset>
 //! ```
 //!
-//! ### More examples:
-//!
-//! [Generate URL sitemap](url_set/index.html#examples).
-//! [Generate Index sitemap](sitemap_index/index.html#examples).
-//! [Generate Image sitemap](image/index.html#examples).
-//! [Generate Video sitemap](video/index.html#examples).
-//! [Generate News sitemap](news/index.html#examples).
+//! For more examples, check out the `examples` directory within the repository.
 
 use chrono::SecondsFormat;
 

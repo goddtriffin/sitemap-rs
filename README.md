@@ -1,5 +1,9 @@
 # sitemap-rs
 
+[![Version](https://img.shields.io/crates/v/sitemap-rs)](https://crates.io/crates/sitemap-rs)
+[![License](https://img.shields.io/crates/l/sitewriter)](https://crates.io/crates/sitewriter)
+[![Docs](https://docs.rs/sitemap-rs/badge.svg)](https://docs.rs/sitemap-rs)
+
 Library to generate URL, Index, Image, Video, and News sitemaps.
 
 ## Features
