@@ -10,6 +10,9 @@ description = "Library to generate URL, Index, Image, Video, and News sitemaps."
 license-file = "LICENSE"
 keywords = ["sitemap", "index-sitemap", "image-sitemap", "video-sitemap", "news-sitemap"]
 categories = ["web-programming", "parsing"]
+exclude = [
+    ".idea/*",
+]
 
 [dependencies]
 xml-builder = "0.5.0"
