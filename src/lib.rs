@@ -1,4 +1,4 @@
-//! Library to generate URL, Index, Image, Video, and News sitemaps.
+//! A Rust library to generate URL, Index, Image, Video, and News sitemaps.
 //!
 //! ## Example
 //!
