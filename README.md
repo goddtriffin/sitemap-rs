@@ -305,4 +305,4 @@ Pull requests are welcome!
 
 Made with 🤬 and 🥲 by [Todd Everett Griffin](https://www.toddgriffin.me/).
 
-`sitemap-rs` is open source under the [MIT License](https://github.com/goddtriffin/sitemap-rs/blob/master/LICENSE).
+`sitemap-rs` is open source under the [MIT License](https://github.com/goddtriffin/sitemap-rs/blob/main/LICENSE).
