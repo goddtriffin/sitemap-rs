@@ -1,3 +1,4 @@
+use crate::video_builder::VideoBuilder;
 use crate::video_error::VideoError;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
 use chrono::{DateTime, FixedOffset};
@@ -147,52 +148,40 @@ impl Video {
             return Err(VideoError::DescriptionTooLong(description.len()));
         }
 
-        match duration {
-            None => (),
-            Some(duration) => {
-                // duration should be at least `1` second
-                if duration < 1 {
-                    return Err(VideoError::DurationTooShort(duration));
-                }
-                // duration should be no longer than `28,800` seconds (8 hours)
-                if duration > 28800 {
-                    return Err(VideoError::DurationTooLong(duration));
-                }
+        if let Some(duration) = duration {
+            // duration should be at least `1` second
+            if duration < 1 {
+                return Err(VideoError::DurationTooShort(duration));
+            }
+            // duration should be no longer than `28,800` seconds (8 hours)
+            if duration > 28800 {
+                return Err(VideoError::DurationTooLong(duration));
             }
         }
 
-        match rating {
-            None => (),
-            Some(rating) => {
-                // rating should be no lower than `0.0`
-                if rating < 0.0 {
-                    return Err(VideoError::RatingTooLow(rating));
-                }
+        if let Some(rating) = rating {
+            // rating should be no lower than `0.0`
+            if rating < 0.0 {
+                return Err(VideoError::RatingTooLow(rating));
+            }
 
-                // rating should be no higher than `5.0`
-                if rating > 5.0 {
-                    return Err(VideoError::RatingTooHigh(rating));
-                }
+            // rating should be no higher than `5.0`
+            if rating > 5.0 {
+                return Err(VideoError::RatingTooHigh(rating));
             }
         }
 
-        match uploader {
-            None => (),
-            Some(ref uploader) => {
-                // uploader name should be no longer than `255` characters
-                if uploader.name.len() > 255 {
-                    return Err(VideoError::UploaderNameTooLong(uploader.name.len()));
-                }
+        if let Some(uploader) = &uploader {
+            // uploader name should be no longer than `255` characters
+            if uploader.name.len() > 255 {
+                return Err(VideoError::UploaderNameTooLong(uploader.name.len()));
             }
         }
 
-        match tags {
-            None => (),
-            Some(ref tags) => {
-                // there should not be more than `32` tags
-                if tags.len() > 32 {
-                    return Err(VideoError::TooManyTags(tags.len()));
-                }
+        if let Some(tags) = &tags {
+            // there should not be more than `32` tags
+            if tags.len() > 32 {
+                return Err(VideoError::TooManyTags(tags.len()));
             }
         }
 
@@ -215,6 +204,23 @@ impl Video {
             live,
             tags,
         })
+    }
+
+    #[must_use]
+    pub const fn builder(
+        thumbnail_location: String,
+        title: String,
+        description: String,
+        content_location: String,
+        player_location: String,
+    ) -> VideoBuilder {
+        VideoBuilder::new(
+            thumbnail_location,
+            title,
+            description,
+            content_location,
+            player_location,
+        )
     }
 
     /// # Errors
@@ -250,124 +256,88 @@ impl Video {
         video.add_child(player_loc)?;
 
         // add <video:duration>, if it exists
-        match self.duration {
-            None => (),
-            Some(d) => {
-                let mut duration: XMLElement = XMLElement::new("video:duration");
-                duration.add_text(d.to_string())?;
-                video.add_child(duration)?;
-            }
+        if let Some(d) = self.duration {
+            let mut duration: XMLElement = XMLElement::new("video:duration");
+            duration.add_text(d.to_string())?;
+            video.add_child(duration)?;
         }
 
         // add <video:expiration_date>, if it exists
-        match self.expiration_date {
-            None => (),
-            Some(exp_date) => {
-                let mut expiration_date: XMLElement = XMLElement::new("video:expiration_date");
-                expiration_date
-                    .add_text(exp_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
-                video.add_child(expiration_date)?;
-            }
+        if let Some(exp_date) = self.expiration_date {
+            let mut expiration_date: XMLElement = XMLElement::new("video:expiration_date");
+            expiration_date
+                .add_text(exp_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
+            video.add_child(expiration_date)?;
         }
 
         // add <video:rating>, if it exists
-        match self.rating {
-            None => (),
-            Some(r) => {
-                let mut rating: XMLElement = XMLElement::new("video:rating");
-                rating.add_text(r.to_string())?;
-                video.add_child(rating)?;
-            }
+        if let Some(r) = self.rating {
+            let mut rating: XMLElement = XMLElement::new("video:rating");
+            rating.add_text(r.to_string())?;
+            video.add_child(rating)?;
         }
 
         // add <video:view_count>, if it exists
-        match self.view_count {
-            None => (),
-            Some(vc) => {
-                let mut view_count: XMLElement = XMLElement::new("video:view_count");
-                view_count.add_text(vc.to_string())?;
-                video.add_child(view_count)?;
-            }
+        if let Some(vc) = self.view_count {
+            let mut view_count: XMLElement = XMLElement::new("video:view_count");
+            view_count.add_text(vc.to_string())?;
+            video.add_child(view_count)?;
         }
 
         // add <video:publication_date>, if it exists
-        match self.publication_date {
-            None => (),
-            Some(pub_date) => {
-                let mut publication_date: XMLElement = XMLElement::new("video:publication_date");
-                publication_date
-                    .add_text(pub_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
-                video.add_child(publication_date)?;
-            }
+        if let Some(pub_date) = self.publication_date {
+            let mut publication_date: XMLElement = XMLElement::new("video:publication_date");
+            publication_date
+                .add_text(pub_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
+            video.add_child(publication_date)?;
         }
 
         // add <video:family_friendly>, if it exists
-        match self.family_friendly {
-            None => (),
-            Some(ff) => {
-                let ff: &str = if ff { "yes" } else { "no" };
-                let mut family_friendly: XMLElement = XMLElement::new("video:family_friendly");
-                family_friendly.add_text(ff.to_string())?;
-                video.add_child(family_friendly)?;
-            }
+        if let Some(ff) = self.family_friendly {
+            let ff: &str = if ff { "yes" } else { "no" };
+            let mut family_friendly: XMLElement = XMLElement::new("video:family_friendly");
+            family_friendly.add_text(ff.to_string())?;
+            video.add_child(family_friendly)?;
         }
 
         // add <video:restriction>, if it exists
-        match self.restriction {
-            None => (),
-            Some(restriction) => {
-                video.add_child(restriction.to_xml()?)?;
-            }
+        if let Some(restriction) = self.restriction {
+            video.add_child(restriction.to_xml()?)?;
         }
 
         // add <video:platform>, if it exists
-        match self.platform {
-            None => (),
-            Some(platform) => {
-                video.add_child(platform.to_xml()?)?;
-            }
+        if let Some(platform) = self.platform {
+            video.add_child(platform.to_xml()?)?;
         }
 
         // add <video:requires_subscription>, if it exists
-        match self.requires_subscription {
-            None => (),
-            Some(requires_sub) => {
-                let requires_sub: &str = if requires_sub { "yes" } else { "no" };
-                let mut requires_subscription: XMLElement =
-                    XMLElement::new("video:requires_subscription");
-                requires_subscription.add_text(requires_sub.to_string())?;
-                video.add_child(requires_subscription)?;
-            }
+        if let Some(requires_sub) = self.requires_subscription {
+            let requires_sub: &str = if requires_sub { "yes" } else { "no" };
+            let mut requires_subscription: XMLElement =
+                XMLElement::new("video:requires_subscription");
+            requires_subscription.add_text(requires_sub.to_string())?;
+            video.add_child(requires_subscription)?;
         }
 
         // add <video:uploader>, if it exists
-        match self.uploader {
-            None => (),
-            Some(uploader) => {
-                video.add_child(uploader.to_xml()?)?;
-            }
+        if let Some(uploader) = self.uploader {
+            video.add_child(uploader.to_xml()?)?;
         }
 
         // add <video:live>, if it exists
-        match self.live {
-            None => (),
-            Some(l) => {
-                let l: &str = if l { "yes" } else { "no" };
-                let mut live: XMLElement = XMLElement::new("video:live");
-                live.add_text(l.to_string())?;
-                video.add_child(live)?;
-            }
+        if let Some(l) = self.live {
+            let l: &str = if l { "yes" } else { "no" };
+            let mut live: XMLElement = XMLElement::new("video:live");
+            live.add_text(l.to_string())?;
+            video.add_child(live)?;
         }
 
         // add <video:tag>, if it exists
-        match self.tags {
-            None => (),
-            Some(tags) => {
-                for t in tags {
-                    let mut tag: XMLElement = XMLElement::new("video:tag");
-                    tag.add_text(t)?;
-                    video.add_child(tag)?;
-                }
+        if let Some(tags) = self.tags {
+            for t in tags {
+                let mut tag: XMLElement = XMLElement::new("video:tag");
+                tag.add_text(t)?;
+                video.add_child(tag)?;
             }
         }
 
@@ -534,11 +504,8 @@ impl Uploader {
         let mut uploader: XMLElement = XMLElement::new("video:uploader");
 
         // set info attribute, if it exists
-        match self.info {
-            None => (),
-            Some(info) => {
-                uploader.add_attribute("info", info.as_str());
-            }
+        if let Some(info) = self.info {
+            uploader.add_attribute("info", info.as_str());
         }
 
         // set uploader name as text

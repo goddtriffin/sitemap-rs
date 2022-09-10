@@ -1,12 +1,25 @@
 use chrono::{DateTime, FixedOffset, NaiveDate};
-use sitemap_rs::url::Url;
-use sitemap_rs::url_set::UrlSet;
 use sitemap_rs::video::{Platform, PlatformType, Relationship, Restriction, Uploader, Video};
+use sitemap_rs::video_builder::VideoBuilder;
+use sitemap_rs::video_error::VideoError;
 use std::collections::HashSet;
-use std::path::PathBuf;
 
-fn main() {
-    let video: Video = Video::builder(
+#[test]
+fn test_only_required_fields() {
+    let url_builder_result: Result<Video, VideoError> = VideoBuilder::new(
+        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("Grilling steaks for summer"),
+        String::from("Alkis shows you how to get perfectly done steaks every time"),
+        String::from("http://streamserver.example.com/video123.mp4"),
+        String::from("http://www.example.com/videoplayer.php?video=123"),
+    )
+    .build();
+    assert!(url_builder_result.is_ok());
+}
+
+#[test]
+fn test_all_fields() {
+    let url_builder_result: Result<Video, VideoError> = VideoBuilder::new(
         String::from("http://www.example.com/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
@@ -52,18 +65,6 @@ fn main() {
         String::from("summer"),
         String::from("outdoor"),
     ])
-    .build()
-    .expect("failed a <video:video> validation");
-
-    let urls: Vec<Url> = vec![Url::builder(String::from(
-        "http://www.example.com/videos/some_video_landing_page.html",
-    ))
-    .videos(vec![video])
-    .build()
-    .expect("failed a <url> validation")];
-
-    let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
-    url_set
-        .write_to_file(PathBuf::from("./target/video-sitemap.xml"))
-        .unwrap();
+    .build();
+    assert!(url_builder_result.is_ok());
 }
