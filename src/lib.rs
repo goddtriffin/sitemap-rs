@@ -53,6 +53,7 @@ pub mod sitemap;
 pub mod sitemap_index;
 pub mod sitemap_index_error;
 pub mod url;
+pub mod url_builder;
 pub mod url_error;
 pub mod url_set;
 pub mod url_set_error;

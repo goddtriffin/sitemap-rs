@@ -1,5 +1,6 @@
 use crate::image::Image;
 use crate::news::News;
+use crate::url_builder::UrlBuilder;
 use crate::url_error::UrlError;
 use crate::video::Video;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
@@ -111,6 +112,11 @@ impl Url {
             videos,
             news,
         })
+    }
+
+    #[must_use]
+    pub const fn builder(location: String) -> UrlBuilder {
+        UrlBuilder::new(location)
     }
 
     /// # Errors
