@@ -264,17 +264,6 @@ It is by far fast enough for my use-cases, so I didn't have to reach for anythin
 If you like what this library provides, but simply need the ability to parse sitemaps and could also use a speed boost - 
 please consider pushing a pull request! (Preferably one that replaces `xml-builder` with `quick-xml` lol)
 
-#### Builder pattern
-
-Currently, the only way to create instances of each struct is by using `::new()`.
-By implementing the [Builder pattern](https://en.wikipedia.org/wiki/Builder_pattern) on each struct, less work has to be done
-on the library users' side as they don't have to throw in many `None` values for each optional field they don't want to use.
-Not only would this make the library more ergonomic to use, but it would vastly improve readability (specifically at 
-each struct initialization point).
-
-This hasn't been prioritized yet as I am currently satisfied with `::new()` for my use cases.
-Pull requests are welcome!
-
 #### Codified country codes
 
 In video sitemaps, there is a tag called `<video: restriction>` where the text is a space-delimited list of country codes

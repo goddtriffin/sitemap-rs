@@ -1,3 +1,4 @@
+use crate::video_builder::VideoBuilder;
 use crate::video_error::VideoError;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
 use chrono::{DateTime, FixedOffset};
@@ -203,6 +204,23 @@ impl Video {
             live,
             tags,
         })
+    }
+
+    #[must_use]
+    pub const fn builder(
+        thumbnail_location: String,
+        title: String,
+        description: String,
+        content_location: String,
+        player_location: String,
+    ) -> VideoBuilder {
+        VideoBuilder::new(
+            thumbnail_location,
+            title,
+            description,
+            content_location,
+            player_location,
+        )
     }
 
     /// # Errors

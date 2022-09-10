@@ -10,19 +10,15 @@
 //! use sitemap_rs::url_set::UrlSet;
 //! use std::path::PathBuf;
 //!
-//! let urls: Vec<Url> = vec![Url::new(
-//!     String::from("http://www.example.com/"),
-//!     Some(DateTime::from_utc(
+//! let urls: Vec<Url> = vec![Url::builder(String::from("http://www.example.com/"))
+//!     .last_modified(DateTime::from_utc(
 //!         NaiveDate::from_ymd(2005, 1, 1).and_hms(0, 0, 0),
 //!         FixedOffset::east(0),
-//!     )),
-//!     Some(ChangeFrequency::Monthly),
-//!     Some(0.8),
-//!     None,
-//!     None,
-//!     None,
-//! )
-//! .expect("failed a <url> validation")];
+//!     ))
+//!     .change_frequency(ChangeFrequency::Monthly)
+//!     .priority(0.8)
+//!     .build()
+//!     .expect("failed a <url> validation")];
 //!
 //! let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
 //! url_set
@@ -58,6 +54,7 @@ pub mod url_error;
 pub mod url_set;
 pub mod url_set_error;
 pub mod video;
+pub mod video_builder;
 pub mod video_error;
 
 pub const NAMESPACE: &str = "http://www.sitemaps.org/schemas/sitemap/0.9";

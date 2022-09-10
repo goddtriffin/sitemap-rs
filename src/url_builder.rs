@@ -74,31 +74,26 @@ impl UrlBuilder {
         self
     }
 
-    #[must_use]
     pub fn change_frequency(&mut self, change_frequency: ChangeFrequency) -> &mut Self {
         self.change_frequency = Some(change_frequency);
         self
     }
 
-    #[must_use]
     pub fn priority(&mut self, priority: f32) -> &mut Self {
         self.priority = Some(priority);
         self
     }
 
-    #[must_use]
     pub fn images(&mut self, images: Vec<Image>) -> &mut Self {
         self.images = Some(images);
         self
     }
 
-    #[must_use]
     pub fn videos(&mut self, videos: Vec<Video>) -> &mut Self {
         self.videos = Some(videos);
         self
     }
 
-    #[must_use]
     pub fn news(&mut self, news: News) -> &mut Self {
         self.news = Some(news);
         self

@@ -32,25 +32,13 @@ fn test_all_fields() {
             .change_frequency(ChangeFrequency::Weekly)
             .priority(DEFAULT_PRIORITY)
             .images(vec![Image::new(String::from("https://www.toddgriffin.me/static/image/social/profile-picture.webp"))])
-            .videos(vec![Video::new(
+            .videos(vec![Video::builder(
                 String::from("http://www.example.com/thumbs/123.jpg"),
                 String::from("Grilling steaks for summer"),
                 String::from("Alkis shows you how to get perfectly done steaks every time"),
                 String::from("http://streamserver.example.com/video123.mp4"),
                 String::from("http://www.example.com/videoplayer.php?video=123"),
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-            ).unwrap()])
+            ).build().unwrap()])
             .news(News::new(
                 Publication::new(String::from("The Todd Times"), String::from("en")),
                 DateTime::from(Utc::now()),
