@@ -46,22 +46,16 @@ impl UrlSet {
         let mut news_exists: bool = false;
         for url in &urls {
             // if any <url>s exist that contain an image, set the image namespace
-            match &url.images {
-                None => (),
-                Some(images) => {
-                    if !images.is_empty() {
-                        xmlns_image = Some(IMAGE_NAMESPACE.to_string());
-                    }
+            if let Some(images) = &url.images {
+                if !images.is_empty() {
+                    xmlns_image = Some(IMAGE_NAMESPACE.to_string());
                 }
             }
 
             // if any <url>s exist that contain a video, set the video namespace
-            match &url.videos {
-                None => (),
-                Some(videos) => {
-                    if !videos.is_empty() {
-                        xmlns_video = Some(VIDEO_NAMESPACE.to_string());
-                    }
+            if let Some(videos) = &url.videos {
+                if !videos.is_empty() {
+                    xmlns_video = Some(VIDEO_NAMESPACE.to_string());
                 }
             }
 
@@ -105,27 +99,18 @@ impl UrlSet {
         urlset.add_attribute("xmlns", self.xmlns.as_str());
 
         // set image namespace, if it exists
-        match self.xmlns_image {
-            None => (),
-            Some(xmlns_image) => {
-                urlset.add_attribute("xmlns:image", xmlns_image.as_str());
-            }
+        if let Some(xmlns_image) = self.xmlns_image {
+            urlset.add_attribute("xmlns:image", xmlns_image.as_str());
         }
 
         // set video namespace, if it exists
-        match self.xmlns_video {
-            None => (),
-            Some(xmlns_video) => {
-                urlset.add_attribute("xmlns:video", xmlns_video.as_str());
-            }
+        if let Some(xmlns_video) = self.xmlns_video {
+            urlset.add_attribute("xmlns:video", xmlns_video.as_str());
         }
 
         // set video namespace, if it exists
-        match self.xmlns_news {
-            None => (),
-            Some(xmlns_news) => {
-                urlset.add_attribute("xmlns:news", xmlns_news.as_str());
-            }
+        if let Some(xmlns_news) = self.xmlns_news {
+            urlset.add_attribute("xmlns:news", xmlns_news.as_str());
         }
 
         // add each <url>

@@ -40,15 +40,11 @@ impl Sitemap {
         sitemap.add_child(loc)?;
 
         // add <lastmod>, if it exists
-        match self.last_modified {
-            None => (),
-            Some(last_modified) => {
-                let mut last_mod: XMLElement = XMLElement::new("lastmod");
-                last_mod.add_text(
-                    last_modified.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
-                )?;
-                sitemap.add_child(last_mod)?;
-            }
+        if let Some(last_modified) = self.last_modified {
+            let mut last_mod: XMLElement = XMLElement::new("lastmod");
+            last_mod
+                .add_text(last_modified.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
+            sitemap.add_child(last_mod)?;
         }
 
         Ok(sitemap)

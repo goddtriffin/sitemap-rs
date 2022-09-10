@@ -109,7 +109,7 @@ impl UrlBuilder {
     /// Will return `UrlError::PriorityTooLow` if `priority` is below `0.0`.
     /// Will return `UrlError::PriorityTooHigh` if `priority` is above `1.0`.
     /// Will return `UrlError::TooManyImages` if the length of `images` is above `1,000`.
-    pub fn build(&mut self) -> Result<Url, UrlError> {
+    pub fn build(&self) -> Result<Url, UrlError> {
         Url::new(
             self.location.clone(),
             self.last_modified,

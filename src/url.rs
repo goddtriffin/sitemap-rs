@@ -75,15 +75,12 @@ impl Url {
         news: Option<News>,
     ) -> Result<Self, UrlError> {
         // make sure priority is within bounds: 0.0 <= priority <= 1.0
-        match priority {
-            None => (),
-            Some(p) => {
-                if p < 0.0 {
-                    return Err(UrlError::PriorityTooLow(p));
-                }
-                if p > 1.0 {
-                    return Err(UrlError::PriorityTooHigh(p));
-                }
+        if let Some(p) = priority {
+            if p < 0.0 {
+                return Err(UrlError::PriorityTooLow(p));
+            }
+            if p > 1.0 {
+                return Err(UrlError::PriorityTooHigh(p));
             }
         }
 
@@ -131,63 +128,44 @@ impl Url {
         url.add_child(loc)?;
 
         // add <lastmod>, if it exists
-        match self.last_modified {
-            None => (),
-            Some(last_modified) => {
-                let mut lastmod: XMLElement = XMLElement::new("lastmod");
-                lastmod.add_text(
-                    last_modified.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
-                )?;
-                url.add_child(lastmod)?;
-            }
+        if let Some(last_modified) = self.last_modified {
+            let mut lastmod: XMLElement = XMLElement::new("lastmod");
+            lastmod
+                .add_text(last_modified.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
+            url.add_child(lastmod)?;
         }
 
         // add <changefreq>, if it exists
-        match self.change_frequency {
-            None => (),
-            Some(change_frequency) => {
-                let mut changefreq: XMLElement = XMLElement::new("changefreq");
-                changefreq.add_text(change_frequency.to_string())?;
-                url.add_child(changefreq)?;
-            }
+        if let Some(change_frequency) = self.change_frequency {
+            let mut changefreq: XMLElement = XMLElement::new("changefreq");
+            changefreq.add_text(change_frequency.to_string())?;
+            url.add_child(changefreq)?;
         }
 
         // add <priority>, if it exists
-        match self.priority {
-            None => (),
-            Some(p) => {
-                let mut priority: XMLElement = XMLElement::new("priority");
-                priority.add_text(p.to_string())?;
-                url.add_child(priority)?;
-            }
+        if let Some(p) = self.priority {
+            let mut priority: XMLElement = XMLElement::new("priority");
+            priority.add_text(p.to_string())?;
+            url.add_child(priority)?;
         }
 
         // add <image:image>, if any exist
-        match self.images {
-            None => (),
-            Some(images) => {
-                for image in images {
-                    url.add_child(image.to_xml()?)?;
-                }
+        if let Some(images) = self.images {
+            for image in images {
+                url.add_child(image.to_xml()?)?;
             }
         }
 
         // add <video:video>, if any exist
-        match self.videos {
-            None => (),
-            Some(videos) => {
-                for video in videos {
-                    url.add_child(video.to_xml()?)?;
-                }
+        if let Some(videos) = self.videos {
+            for video in videos {
+                url.add_child(video.to_xml()?)?;
             }
         }
 
         // add <news:news>, if any exist
-        match self.news {
-            None => (),
-            Some(news) => {
-                url.add_child(news.to_xml()?)?;
-            }
+        if let Some(news) = self.news {
+            url.add_child(news.to_xml()?)?;
         }
 
         Ok(url)
