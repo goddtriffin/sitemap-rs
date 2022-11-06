@@ -1,7 +1,6 @@
 use sitemap_rs::image::Image;
 use sitemap_rs::url::Url;
 use sitemap_rs::url_set::UrlSet;
-use std::path::PathBuf;
 
 fn main() {
     let urls: Vec<Url> = vec![
@@ -21,7 +20,6 @@ fn main() {
     ];
 
     let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
-    url_set
-        .write_to_file(PathBuf::from("./target/image-sitemap.xml"))
-        .unwrap();
+    let mut buf = Vec::<u8>::new();
+    url_set.write(&mut buf).unwrap();
 }

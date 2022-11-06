@@ -2,7 +2,6 @@ use chrono::{DateTime, FixedOffset, NaiveDate};
 use sitemap_rs::news::{News, Publication};
 use sitemap_rs::url::Url;
 use sitemap_rs::url_set::UrlSet;
-use std::path::PathBuf;
 
 fn main() {
     let urls: Vec<Url> = vec![Url::builder(String::from(
@@ -20,7 +19,6 @@ fn main() {
     .expect("failed a <url> validation")];
 
     let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
-    url_set
-        .write_to_file(PathBuf::from("./target/news-sitemap.xml"))
-        .unwrap();
+    let mut buf = Vec::<u8>::new();
+    url_set.write(&mut buf).unwrap();
 }

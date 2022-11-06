@@ -3,7 +3,6 @@ use sitemap_rs::url::Url;
 use sitemap_rs::url_set::UrlSet;
 use sitemap_rs::video::{Platform, PlatformType, Relationship, Restriction, Uploader, Video};
 use std::collections::HashSet;
-use std::path::PathBuf;
 
 fn main() {
     let video: Video = Video::builder(
@@ -63,7 +62,6 @@ fn main() {
     .expect("failed a <url> validation")];
 
     let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
-    url_set
-        .write_to_file(PathBuf::from("./target/video-sitemap.xml"))
-        .unwrap();
+    let mut buf = Vec::<u8>::new();
+    url_set.write(&mut buf).unwrap();
 }
