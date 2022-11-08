@@ -1,7 +1,6 @@
 use chrono::{DateTime, FixedOffset, NaiveDate};
 use sitemap_rs::sitemap::Sitemap;
 use sitemap_rs::sitemap_index::SitemapIndex;
-use std::path::PathBuf;
 
 fn main() {
     let sitemaps: Vec<Sitemap> = vec![
@@ -23,7 +22,6 @@ fn main() {
 
     let index_sitemap: SitemapIndex =
         SitemapIndex::new(sitemaps).expect("failed a <sitemapindex> validation");
-    index_sitemap
-        .write_to_file(PathBuf::from("./target/index-sitemap.xml"))
-        .unwrap();
+    let mut buf = Vec::<u8>::new();
+    index_sitemap.write(&mut buf).unwrap();
 }

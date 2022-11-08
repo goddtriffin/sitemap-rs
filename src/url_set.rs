@@ -1,8 +1,7 @@
 use crate::url::Url;
 use crate::url_set_error::UrlSetError;
 use crate::{ENCODING, IMAGE_NAMESPACE, NAMESPACE, NEWS_NAMESPACE, VIDEO_NAMESPACE};
-use std::fs::File;
-use std::path::PathBuf;
+use std::io::Write;
 use xml_builder::{XMLBuilder, XMLElement, XMLError, XMLVersion, XML};
 
 /// Encapsulates the file and references the current protocol standard.
@@ -125,12 +124,10 @@ impl UrlSet {
 
     /// # Errors
     ///
-    /// Will return `XMLError` if `file_path` if there is an IO Error dealing with the
-    /// underlying file or if there is an error writing XML to the file.
-    pub fn write_to_file(self, file_path: PathBuf) -> Result<(), XMLError> {
+    /// Will return `XMLError` if there is an IO Error dealing with the
+    /// underlying writer or if there is an error generating XML.
+    pub fn write<W: Write>(self, writer: W) -> Result<(), XMLError> {
         let xml = self.to_xml()?;
-        let file = File::create(file_path)?;
-        xml.generate(file)?;
-        Ok(())
+        xml.generate(writer)
     }
 }
