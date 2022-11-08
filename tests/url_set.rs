@@ -63,3 +63,15 @@ fn test_constructor_too_much_news() {
         },
     }
 }
+
+#[test]
+fn test_write() {
+    let urls: Vec<Url> = vec![Url::builder(String::from("https://www.toddgriffin.me/"))
+        .build()
+        .expect("failed a <url> validation")];
+
+    let url_set: UrlSet = UrlSet::new(urls).unwrap();
+
+    let mut buf = Vec::<u8>::new();
+    url_set.write(&mut buf).unwrap();
+}

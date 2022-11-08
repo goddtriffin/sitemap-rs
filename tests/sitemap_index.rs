@@ -33,3 +33,16 @@ fn test_constructor_too_many_sitemaps() {
         },
     }
 }
+
+#[test]
+fn test_write() {
+    let sitemaps: Vec<Sitemap> = vec![Sitemap::new(
+        String::from("https://www.toddgriffin.me/sitemap.xml"),
+        None,
+    )];
+
+    let sitemap_index: SitemapIndex = SitemapIndex::new(sitemaps).unwrap();
+
+    let mut buf = Vec::<u8>::new();
+    sitemap_index.write(&mut buf).unwrap();
+}
