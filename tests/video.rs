@@ -37,14 +37,20 @@ fn test_constructor_all_fields() {
         String::from("http://www.example.com/videoplayer.php?video=123"),
         Some(600),
         Some(DateTime::from_utc(
-            NaiveDate::from_ymd(2021, 11, 5).and_hms(11, 20, 30),
-            FixedOffset::east(8 * 3600),
+            NaiveDate::from_ymd_opt(2021, 11, 5)
+                .unwrap()
+                .and_hms_opt(11, 20, 30)
+                .unwrap(),
+            FixedOffset::east_opt(8 * 3600).unwrap(),
         )),
         Some(4.2),
         Some(12345),
         Some(DateTime::from_utc(
-            NaiveDate::from_ymd(2007, 11, 5).and_hms(11, 20, 30),
-            FixedOffset::east(8 * 3600),
+            NaiveDate::from_ymd_opt(2007, 11, 5)
+                .unwrap()
+                .and_hms_opt(11, 20, 30)
+                .unwrap(),
+            FixedOffset::east_opt(8 * 3600).unwrap(),
         )),
         Some(true),
         Some(Restriction::new(
