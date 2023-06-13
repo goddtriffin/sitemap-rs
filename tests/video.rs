@@ -315,7 +315,7 @@ fn test_constructor_uploader_name_too_long() {
 fn test_constructor_too_many_tags() {
     let mut tags: Vec<String> = vec![];
     for i in 0..33 {
-        tags.push(format!("tag_{}", i));
+        tags.push(format!("tag_{i}"));
     }
 
     let video_result: Result<Video, VideoError> = Video::new(

@@ -17,10 +17,10 @@ impl Display for UrlSetError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::TooManyUrls(count) => {
-                write!(f, "must not contain more than 50,000 URLs: {}", count)
+                write!(f, "must not contain more than 50,000 URLs: {count}")
             }
             Self::TooMuchNews(count) => {
-                write!(f, "must not contains more than 1,000 news URLs: {}", count)
+                write!(f, "must not contains more than 1,000 news URLs: {count}")
             }
         }
     }
