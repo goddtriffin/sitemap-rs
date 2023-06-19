@@ -21,7 +21,7 @@ pub struct UrlSet {
     /// A namespace extension for allowing \<video\> in the UrlSet.
     pub xmlns_video: Option<String>,
 
-    /// A namespace extension for allowing \<new\> in the UrlSet.
+    /// A namespace extension for allowing \<news\> in the UrlSet.
     pub xmlns_news: Option<String>,
 
     /// All the URLs that will become indexed.
@@ -107,7 +107,7 @@ impl UrlSet {
             urlset.add_attribute("xmlns:video", xmlns_video.as_str());
         }
 
-        // set video namespace, if it exists
+        // set news namespace, if it exists
         if let Some(xmlns_news) = self.xmlns_news {
             urlset.add_attribute("xmlns:news", xmlns_news.as_str());
         }
