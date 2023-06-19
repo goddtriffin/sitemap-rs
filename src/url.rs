@@ -263,3 +263,44 @@ pub struct Alternate {
     pub hreflang: String,
     pub href: String,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn test_to_xml() {
+        let url: Url = Url::builder(String::from("https://www.example.com/"))
+            .last_modified(DateTime::parse_from_rfc3339("2023-01-01T13:37:00+00:00").unwrap())
+            .change_frequency(ChangeFrequency::Weekly)
+            .priority(DEFAULT_PRIORITY)
+            .alternates(vec![Alternate {
+                hreflang: String::from("en-US"),
+                href: String::from("https://www.example.com/"),
+            }])
+            .push_alternate(
+                String::from("x-default"),
+                String::from("https://www.example.com/country-selector"),
+            )
+            .build()
+            .expect("failed a <url> validation");
+
+        let xml: XMLElement = url.to_xml().unwrap();
+        let mut buf = Vec::<u8>::new();
+        xml.render(&mut buf, true, true).unwrap();
+        let result = String::from_utf8(buf).unwrap();
+        assert_eq!(
+            "\
+            <url>\n\
+                \t<loc>https://www.example.com/</loc>\n\
+                \t<lastmod>2023-01-01T13:37:00+00:00</lastmod>\n\
+                \t<changefreq>weekly</changefreq>\n\
+                \t<priority>0.5</priority>\n\
+                \t<xhtml:link href=\"https://www.example.com/\" hreflang=\"en-US\" rel=\"alternate\" />\n\
+                \t<xhtml:link href=\"https://www.example.com/country-selector\" hreflang=\"x-default\" rel=\"alternate\" />\n\
+            </url>\n",
+            result
+        );
+    }
+}
