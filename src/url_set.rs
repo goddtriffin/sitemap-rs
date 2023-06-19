@@ -1,6 +1,8 @@
 use crate::url::Url;
 use crate::url_set_error::UrlSetError;
-use crate::{ENCODING, IMAGE_NAMESPACE, NAMESPACE, NEWS_NAMESPACE, VIDEO_NAMESPACE};
+use crate::{
+    ENCODING, IMAGE_NAMESPACE, NAMESPACE, NEWS_NAMESPACE, VIDEO_NAMESPACE, XHTML_NAMESPACE,
+};
 use std::io::Write;
 use xml_builder::{XMLBuilder, XMLElement, XMLError, XMLVersion, XML};
 
@@ -24,6 +26,11 @@ pub struct UrlSet {
     /// A namespace extension for allowing \<news\> in the UrlSet.
     pub xmlns_news: Option<String>,
 
+    /// A namespace extension for allowing \<xhtml\> in the UrlSet.
+    ///
+    /// This is relevant for adding links with `rel=alternate`.
+    pub xmlns_xhtml: Option<String>,
+
     /// All the URLs that will become indexed.
     pub urls: Vec<Url>,
 }
@@ -42,6 +49,7 @@ impl UrlSet {
         let mut xmlns_image: Option<String> = None;
         let mut xmlns_video: Option<String> = None;
         let mut xmlns_news: Option<String> = None;
+        let mut xmlns_xhtml: Option<String> = None;
         let mut news_exists: bool = false;
         for url in &urls {
             // if any <url>s exist that contain an image, set the image namespace
@@ -65,6 +73,13 @@ impl UrlSet {
                     xmlns_news = Some(NEWS_NAMESPACE.to_string());
                 }
             }
+
+            // if any <url>s exist that contain an alternate, set the xhtml namespace
+            if let Some(alternates) = &url.alternates {
+                if !alternates.is_empty() {
+                    xmlns_xhtml = Some(XHTML_NAMESPACE.to_string());
+                }
+            }
         }
 
         // cannot have more than 1,000 news URLs in a single UrlSet
@@ -79,6 +94,7 @@ impl UrlSet {
             xmlns_image,
             xmlns_video,
             xmlns_news,
+            xmlns_xhtml,
             urls,
         })
     }
@@ -110,6 +126,11 @@ impl UrlSet {
         // set news namespace, if it exists
         if let Some(xmlns_news) = self.xmlns_news {
             urlset.add_attribute("xmlns:news", xmlns_news.as_str());
+        }
+
+        // set xhtml namespace, if it exists
+        if let Some(xmlns_xhtml) = self.xmlns_xhtml {
+            urlset.add_attribute("xmlns:xhtml", xmlns_xhtml.as_str());
         }
 
         // add each <url>

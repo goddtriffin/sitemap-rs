@@ -5,6 +5,7 @@ use crate::url_error::UrlError;
 use crate::video::Video;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
 use chrono::{DateTime, FixedOffset};
+use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
 use xml_builder::{XMLElement, XMLError};
 
@@ -57,6 +58,11 @@ pub struct Url {
 
     /// News associated with this URL.
     pub news: Option<News>,
+
+    /// Language Alternates for this URL.
+    ///
+    /// Alternates must not contain duplicate hreflang values.
+    pub alternates: Option<Vec<Alternate>>,
 }
 
 impl Url {
@@ -65,6 +71,8 @@ impl Url {
     /// Will return `UrlError::PriorityTooLow` if `priority` is below `0.0`.
     /// Will return `UrlError::PriorityTooHigh` if `priority` is above `1.0`.
     /// Will return `UrlError::TooManyImages` if the length of `images` is above `1,000`.
+    /// Will return `UrlError::DuplicateAlternateHreflangs` if `alternates` contain duplicate `hreflang` values.
+    #[allow(clippy::complexity)]
     pub fn new(
         location: String,
         last_modified: Option<DateTime<FixedOffset>>,
@@ -73,6 +81,7 @@ impl Url {
         images: Option<Vec<Image>>,
         videos: Option<Vec<Video>>,
         news: Option<News>,
+        alternates: Option<Vec<Alternate>>,
     ) -> Result<Self, UrlError> {
         // make sure priority is within bounds: 0.0 <= priority <= 1.0
         if let Some(p) = priority {
@@ -100,6 +109,22 @@ impl Url {
             }
         };
 
+        let alternates: Option<Vec<Alternate>> = match alternates {
+            None => None,
+            Some(alternates) => {
+                let mut unique_hreflangs = HashSet::new();
+                for alternate in &alternates {
+                    if !unique_hreflangs.insert(&alternate.hreflang) {
+                        return Err(UrlError::DuplicateAlternateHreflangs(
+                            alternate.hreflang.clone(),
+                            alternate.href.clone(),
+                        ));
+                    }
+                }
+                Some(alternates)
+            }
+        };
+
         Ok(Self {
             location,
             last_modified,
@@ -108,6 +133,7 @@ impl Url {
             images,
             videos,
             news,
+            alternates,
         })
     }
 
@@ -124,7 +150,7 @@ impl Url {
 
         // add <loc>
         let mut loc: XMLElement = XMLElement::new("loc");
-        loc.add_text(self.location)?;
+        loc.add_text(self.location.clone())?;
         url.add_child(loc)?;
 
         // add <lastmod>, if it exists
@@ -166,6 +192,17 @@ impl Url {
         // add <news:news>, if any exist
         if let Some(news) = self.news {
             url.add_child(news.to_xml()?)?;
+        }
+
+        // add <xhtml:link>, if any exist
+        if let Some(alternates) = self.alternates {
+            for alternate in alternates {
+                let mut alternate_link: XMLElement = XMLElement::new("xhtml:link");
+                alternate_link.add_attribute("rel", "alternate");
+                alternate_link.add_attribute("hreflang", &alternate.hreflang);
+                alternate_link.add_attribute("href", &alternate.href);
+                url.add_child(alternate_link)?;
+            }
         }
 
         Ok(url)
@@ -214,4 +251,15 @@ impl Display for ChangeFrequency {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.as_str())
     }
+}
+
+/// Language Alternates for URL.
+///
+/// Alternates can be used to inform search engines about all language and region variants of a URL.
+///
+/// Possible values for hreflang are language codes (e.g. "en"), locales (e.g. "en-US") or "x-default".
+#[derive(Debug, Clone)]
+pub struct Alternate {
+    pub hreflang: String,
+    pub href: String,
 }
