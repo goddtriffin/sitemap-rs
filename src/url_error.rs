@@ -20,13 +20,13 @@ impl Display for UrlError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::PriorityTooLow(priority) => {
-                write!(f, "priority must not be below 0.0: {}", priority)
+                write!(f, "priority must not be below 0.0: {priority}")
             }
             Self::PriorityTooHigh(priority) => {
-                write!(f, "priority must not be above 1.0: {}", priority)
+                write!(f, "priority must not be above 1.0: {priority}")
             }
             Self::TooManyImages(count) => {
-                write!(f, "must not contain more tha 1,000 images: {}", count)
+                write!(f, "must not contain more tha 1,000 images: {count}")
             }
         }
     }

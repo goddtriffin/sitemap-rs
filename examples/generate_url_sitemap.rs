@@ -5,8 +5,11 @@ use sitemap_rs::url_set::UrlSet;
 fn main() {
     let urls: Vec<Url> = vec![Url::builder(String::from("http://www.example.com/"))
         .last_modified(DateTime::from_utc(
-            NaiveDate::from_ymd(2005, 1, 1).and_hms(0, 0, 0),
-            FixedOffset::east(0),
+            NaiveDate::from_ymd_opt(2005, 1, 1)
+                .unwrap()
+                .and_hms_opt(0, 0, 0)
+                .unwrap(),
+            FixedOffset::east_opt(0).unwrap(),
         ))
         .change_frequency(ChangeFrequency::Monthly)
         .priority(0.8)

@@ -10,8 +10,11 @@ fn main() {
     .news(News::new(
         Publication::new(String::from("The Example Times"), String::from("en")),
         DateTime::from_utc(
-            NaiveDate::from_ymd(2008, 12, 23).and_hms(0, 0, 0),
-            FixedOffset::east(0),
+            NaiveDate::from_ymd_opt(2008, 12, 23)
+                .unwrap()
+                .and_hms_opt(0, 0, 0)
+                .unwrap(),
+            FixedOffset::east_opt(0).unwrap(),
         ),
         String::from("Companies A, B in Merger Talks"),
     ))

@@ -28,14 +28,20 @@ fn test_all_fields() {
     )
     .duration(600)
     .expiration_date(DateTime::from_utc(
-        NaiveDate::from_ymd(2021, 11, 5).and_hms(11, 20, 30),
-        FixedOffset::east(8 * 3600),
+        NaiveDate::from_ymd_opt(2021, 11, 5)
+            .unwrap()
+            .and_hms_opt(11, 20, 30)
+            .unwrap(),
+        FixedOffset::east_opt(8 * 3600).unwrap(),
     ))
     .rating(4.2)
     .view_count(12345)
     .publication_date(DateTime::from_utc(
-        NaiveDate::from_ymd(2007, 11, 5).and_hms(11, 20, 30),
-        FixedOffset::east(8 * 3600),
+        NaiveDate::from_ymd_opt(2007, 11, 5)
+            .unwrap()
+            .and_hms_opt(11, 20, 30)
+            .unwrap(),
+        FixedOffset::east_opt(8 * 3600).unwrap(),
     ))
     .family_friendly(true)
     .restriction(Restriction::new(

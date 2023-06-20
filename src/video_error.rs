@@ -34,27 +34,26 @@ impl Display for VideoError {
             Self::DescriptionTooLong(count) => {
                 write!(
                     f,
-                    "description cannot be longer than 2048 characters: {}",
-                    count
+                    "description cannot be longer than 2048 characters: {count}"
                 )
             }
             Self::DurationTooShort(duration) => {
-                write!(f, "duration is below 1 (second): {}", duration)
+                write!(f, "duration is below 1 (second): {duration}")
             }
             Self::DurationTooLong(duration) => {
-                write!(f, "duration is above 28,800 (seconds): {}", duration)
+                write!(f, "duration is above 28,800 (seconds): {duration}")
             }
             Self::RatingTooLow(rating) => {
-                write!(f, "rating is below 0.0: {}", rating)
+                write!(f, "rating is below 0.0: {rating}")
             }
             Self::RatingTooHigh(rating) => {
-                write!(f, "rating is above 5.0: {}", rating)
+                write!(f, "rating is above 5.0: {rating}")
             }
             Self::UploaderNameTooLong(count) => {
-                write!(f, "uploader name is longer than 255 characters: {}", count)
+                write!(f, "uploader name is longer than 255 characters: {count}")
             }
             Self::TooManyTags(count) => {
-                write!(f, "must not have more than 32 tags: {}", count)
+                write!(f, "must not have more than 32 tags: {count}")
             }
         }
     }

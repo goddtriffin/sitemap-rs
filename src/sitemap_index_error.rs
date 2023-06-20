@@ -14,7 +14,7 @@ impl Display for SitemapIndexError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::TooManySitemaps(count) => {
-                write!(f, "must not contain more than 50,000 sitemaps: {}", count)
+                write!(f, "must not contain more than 50,000 sitemaps: {count}")
             }
         }
     }
