@@ -102,3 +102,52 @@ impl Publication {
         Ok(publication)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn test_news_to_xml() {
+        let news: News = News::new(
+            Publication::new(String::from("News Site"), String::from("en")),
+            DateTime::parse_from_rfc3339("2023-01-01T13:37:00+00:00").unwrap(),
+            String::from("Awesome Title of News Article"),
+        );
+        let xml: XMLElement = news.to_xml().unwrap();
+        let mut buf = Vec::<u8>::new();
+        xml.render(&mut buf, true, true).unwrap();
+        let result = String::from_utf8(buf).unwrap();
+        assert_eq!(
+            "\
+            <news:news>\n\
+                \t<news:publication>\n\
+                    \t\t<news:name>News Site</news:name>\n\
+                    \t\t<news:language>en</news:language>\n\
+                \t</news:publication>\n\
+                \t<news:publication_date>2023-01-01T13:37:00+00:00</news:publication_date>\n\
+                \t<news:title>Awesome Title of News Article</news:title>\n\
+            </news:news>\n",
+            result
+        );
+    }
+
+    #[test]
+    fn test_publication_to_xml() {
+        let publication: Publication =
+            Publication::new(String::from("News Site"), String::from("en"));
+        let xml: XMLElement = publication.to_xml().unwrap();
+        let mut buf = Vec::<u8>::new();
+        xml.render(&mut buf, true, true).unwrap();
+        let result = String::from_utf8(buf).unwrap();
+        assert_eq!(
+            "\
+            <news:publication>\n\
+                \t<news:name>News Site</news:name>\n\
+                \t<news:language>en</news:language>\n\
+            </news:publication>\n",
+            result
+        );
+    }
+}

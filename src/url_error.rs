@@ -12,6 +12,9 @@ pub enum UrlError {
 
     /// Returned when a sitemap URL entry's `images` is more than 1,000.
     TooManyImages(usize),
+
+    /// Returned when a sitemap URL entry's alternates contain duplicate hreflang values.
+    DuplicateAlternateHreflangs(String, String),
 }
 
 impl error::Error for UrlError {}
@@ -27,6 +30,9 @@ impl Display for UrlError {
             }
             Self::TooManyImages(count) => {
                 write!(f, "must not contain more tha 1,000 images: {count}")
+            }
+            Self::DuplicateAlternateHreflangs(hreflang, href) => {
+                write!(f, "alternates must not contain duplicate hreflang values - hreflang: {hreflang}, href: {href}")
             }
         }
     }

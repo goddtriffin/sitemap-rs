@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use sitemap_rs::image::Image;
 use sitemap_rs::news::{News, Publication};
-use sitemap_rs::url::{ChangeFrequency, Url, DEFAULT_PRIORITY};
+use sitemap_rs::url::{Alternate, ChangeFrequency, Url, DEFAULT_PRIORITY};
 use sitemap_rs::url_builder::UrlBuilder;
 use sitemap_rs::url_error::UrlError;
 use sitemap_rs::video::Video;
@@ -46,6 +46,8 @@ fn test_all_fields() {
                     "Local Software Engineer, Todd, Finally Completes Project He Has Talked About For Years",
                 ),
             ))
+            .alternates(vec![Alternate { hreflang: String::from("en-US"), href: String::from("https://www.example.com/")}])
+            .push_alternate(String::from("de-DE"), String::from("https://de.example.com/"))
             .build();
     assert!(url_builder_result.is_ok());
 }

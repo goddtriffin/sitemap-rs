@@ -50,3 +50,30 @@ impl Sitemap {
         Ok(sitemap)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn test_to_xml() {
+        let sitemap: Sitemap = Sitemap::new(
+            String::from("https://www.example.com/sitemap1.xml.gz"),
+            Some(DateTime::parse_from_rfc3339("2023-01-01T13:37:00+00:00").unwrap()),
+        );
+
+        let xml: XMLElement = sitemap.to_xml().unwrap();
+        let mut buf = Vec::<u8>::new();
+        xml.render(&mut buf, true, true).unwrap();
+        let result = String::from_utf8(buf).unwrap();
+        assert_eq!(
+            "\
+            <sitemap>\n\
+                \t<loc>https://www.example.com/sitemap1.xml.gz</loc>\n\
+                \t<lastmod>2023-01-01T13:37:00+00:00</lastmod>\n\
+            </sitemap>\n",
+            result
+        );
+    }
+}

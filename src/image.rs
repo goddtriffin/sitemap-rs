@@ -32,3 +32,26 @@ impl Image {
         Ok(image)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn test_to_xml() {
+        let image: Image = Image::new(String::from("https://www.example.com/image.jpg"));
+
+        let xml: XMLElement = image.to_xml().unwrap();
+        let mut buf = Vec::<u8>::new();
+        xml.render(&mut buf, true, true).unwrap();
+        let result = String::from_utf8(buf).unwrap();
+        assert_eq!(
+            "\
+            <image:image>\n\
+                \t<image:loc>https://www.example.com/image.jpg</image:loc>\n\
+            </image:image>\n",
+            result
+        );
+    }
+}
