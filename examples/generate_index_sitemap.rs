@@ -6,7 +6,7 @@ fn main() {
     let sitemaps: Vec<Sitemap> = vec![
         Sitemap::new(
             String::from("http://www.example.com/sitemap1.xml.gz"),
-            Some(DateTime::from_utc(
+            Some(DateTime::from_naive_utc_and_offset(
                 NaiveDate::from_ymd_opt(2004, 10, 1)
                     .unwrap()
                     .and_hms_opt(18, 23, 17)
@@ -16,7 +16,7 @@ fn main() {
         ),
         Sitemap::new(
             String::from("http://www.example.com/sitemap2.xml.gz"),
-            Some(DateTime::from_utc(
+            Some(DateTime::from_naive_utc_and_offset(
                 NaiveDate::from_ymd_opt(2005, 1, 1)
                     .unwrap()
                     .and_hms_opt(0, 0, 0)

@@ -36,7 +36,7 @@ fn test_constructor_all_fields() {
         String::from("http://streamserver.example.com/video123.mp4"),
         String::from("http://www.example.com/videoplayer.php?video=123"),
         Some(600),
-        Some(DateTime::from_utc(
+        Some(DateTime::from_naive_utc_and_offset(
             NaiveDate::from_ymd_opt(2021, 11, 5)
                 .unwrap()
                 .and_hms_opt(11, 20, 30)
@@ -45,7 +45,7 @@ fn test_constructor_all_fields() {
         )),
         Some(4.2),
         Some(12345),
-        Some(DateTime::from_utc(
+        Some(DateTime::from_naive_utc_and_offset(
             NaiveDate::from_ymd_opt(2007, 11, 5)
                 .unwrap()
                 .and_hms_opt(11, 20, 30)

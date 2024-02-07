@@ -1,8 +1,8 @@
 [package]
 name = "sitemap-rs"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
-rust-version = "1.65"
+rust-version = "1.75"
 authors = ["Todd Everett Griffin <toddgriffin@protonmail.com>"]
 repository = "https://github.com/goddtriffin/sitemap-rs"
 homepage = "https://www.toddgriffin.me/"
@@ -15,6 +15,23 @@ exclude = [
     ".github/*",
 ]
 
+[lib]
+path = "src/lib.rs"
+
+[lints.rust]
+unsafe_code = { level = "forbid", priority = 0 }
+
+[lints.clippy]
+nursery = { level = "allow", priority = 1 }
+all = { level = "deny", priority = -1 }
+correctness = { level = "deny", priority = -1 }
+suspicious = { level = "deny", priority = -1 }
+style = { level = "deny", priority = -1 }
+complexity = { level = "deny", priority = -1 }
+perf = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+cargo = { level = "deny", priority = -1 }
+
 [dependencies]
-xml-builder = "0.5.1"
-chrono = "0.4.22"
+xml-builder = "0.5.2"
+chrono = "0.4.33"

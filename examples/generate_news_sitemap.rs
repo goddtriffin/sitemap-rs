@@ -9,7 +9,7 @@ fn main() {
     ))
     .news(News::new(
         Publication::new(String::from("The Example Times"), String::from("en")),
-        DateTime::from_utc(
+        DateTime::from_naive_utc_and_offset(
             NaiveDate::from_ymd_opt(2008, 12, 23)
                 .unwrap()
                 .and_hms_opt(0, 0, 0)

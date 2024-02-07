@@ -27,7 +27,7 @@ fn test_all_fields() {
         String::from("http://www.example.com/videoplayer.php?video=123"),
     )
     .duration(600)
-    .expiration_date(DateTime::from_utc(
+    .expiration_date(DateTime::from_naive_utc_and_offset(
         NaiveDate::from_ymd_opt(2021, 11, 5)
             .unwrap()
             .and_hms_opt(11, 20, 30)
@@ -36,7 +36,7 @@ fn test_all_fields() {
     ))
     .rating(4.2)
     .view_count(12345)
-    .publication_date(DateTime::from_utc(
+    .publication_date(DateTime::from_naive_utc_and_offset(
         NaiveDate::from_ymd_opt(2007, 11, 5)
             .unwrap()
             .and_hms_opt(11, 20, 30)

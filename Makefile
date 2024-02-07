@@ -27,15 +27,5 @@ lint: ## lints the codebase using rustfmt and Clippy
 test: ## runs tests
 	cargo fmt --check
 	cargo check
-	cargo clippy --tests -- \
-		-D clippy::all \
-		-D clippy::correctness \
-		-D clippy::suspicious \
-		-D clippy::style \
-		-D clippy::complexity \
-		-D clippy::perf \
-		-D clippy::pedantic \
-		-D clippy::cargo \
-		-W clippy::nursery \
-		-A clippy::multiple_crate_versions
+	cargo clippy --tests
 	cargo test

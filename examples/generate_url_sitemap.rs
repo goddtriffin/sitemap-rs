@@ -4,7 +4,7 @@ use sitemap_rs::url_set::UrlSet;
 
 fn main() {
     let urls: Vec<Url> = vec![Url::builder(String::from("http://www.example.com/"))
-        .last_modified(DateTime::from_utc(
+        .last_modified(DateTime::from_naive_utc_and_offset(
             NaiveDate::from_ymd_opt(2005, 1, 1)
                 .unwrap()
                 .and_hms_opt(0, 0, 0)
