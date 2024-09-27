@@ -2,7 +2,6 @@
 
 [![Version](https://img.shields.io/crates/v/sitemap-rs)](https://crates.io/crates/sitemap-rs)
 [![Docs](https://docs.rs/sitemap-rs/badge.svg)](https://docs.rs/sitemap-rs)
-[![License](https://img.shields.io/crates/l/sitemap-rs)](https://crates.io/crates/sitemap-rs)
 
 A Rust library to generate URL, Index, Image, Video, and News sitemaps.
 
@@ -280,16 +279,9 @@ Pull requests are welcome!
 ### Commands
 
 - `make lint`
-  - Lints the codebase via `cargo fmt`.
 - `make test`
-  - Tests the codebase via:
-    - `cargo fmt`
-    - `cargo check`
-    - `cargo clippy` (with insanely strict defaults)
-    - `cargo test`.
+- `make fix`
 
 ## Credits
 
 Made with 🤬 and 🥲 by [Todd Everett Griffin](https://www.toddgriffin.me/).
-
-`sitemap-rs` is open source under the [MIT License](https://github.com/goddtriffin/sitemap-rs/blob/main/LICENSE).
