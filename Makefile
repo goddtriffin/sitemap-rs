@@ -20,7 +20,7 @@ help: # Prints out help
 	@echo
 
 .PHONY: lint
-lint: ## lints the codebase using rustfmt and Clippy
+lint: ## lints the codebase
 	cargo fmt
 
 .PHONY: test
@@ -29,3 +29,8 @@ test: ## runs tests
 	cargo check
 	cargo clippy --tests
 	cargo test
+
+.PHONY: fix
+fix: ## fixes the codebase
+	cargo fix --allow-dirty
+	cargo clippy --fix --allow-dirty

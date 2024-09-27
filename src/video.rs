@@ -43,7 +43,7 @@ pub struct Video {
     ///
     /// Usually this is the information in the src element of an <embed> tag.
     /// - Must not be the same as the <loc> URL.
-    /// - For YouTube videos, this value is used rather than video:content_loc. This is the equivalent of VideoObject.embedUrl in structured data.
+    /// - For `YouTube` videos, this value is used rather than `video:content_loc`. This is the equivalent of VideoObject.embedUrl in structured data.
     /// - Best practice: If you want to restrict access to your content but still have it crawled, ensure that Googlebot can access your content by using a reverse DNS lookup.
     pub player_location: String,
 
@@ -70,9 +70,9 @@ pub struct Video {
     /// The date the video was first published, in W3C format.
     pub publication_date: Option<DateTime<FixedOffset>>,
 
-    /// Whether the video is available with SafeSearch.
+    /// Whether the video is available with `SafeSearch`.
     ///
-    /// If you omit this tag, the video is available when SafeSearch is turned on.
+    /// If you omit this tag, the video is available when `SafeSearch` is turned on.
     pub family_friendly: Option<bool>,
 
     /// Whether to show or hide your video in search results from specific countries.
@@ -123,7 +123,7 @@ impl Video {
     /// Will return `VideoError::RatingTooHigh` if `rating` is above `5.0`.
     /// Will return `VideoError::UploaderNameTooLong` if `uploader` `name` is longer than `255` characters.
     /// Will return `VideoError::TooManyTags` if there are more than `32` `tags`.
-    #[allow(clippy::too_many_arguments)]
+    #[expect(clippy::too_many_arguments)]
     pub fn new(
         thumbnail_location: String,
         title: String,
@@ -226,7 +226,6 @@ impl Video {
     /// # Errors
     ///
     /// Will return `XMLError` if there is a problem creating XML elements.
-    #[allow(clippy::too_many_lines)]
     pub fn to_xml(self) -> Result<XMLElement, XMLError> {
         let mut video: XMLElement = XMLElement::new("video:video");
 
@@ -457,7 +456,7 @@ pub enum PlatformType {
     Web,
     /// Mobile browsers, such as those on cellular phones or tablets.
     Mobile,
-    /// TV browsers, such as those available through GoogleTV devices and game consoles.
+    /// TV browsers, such as those available through `GoogleTV` devices and game consoles.
     Tv,
 }
 

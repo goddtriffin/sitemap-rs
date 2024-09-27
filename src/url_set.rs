@@ -15,13 +15,13 @@ pub struct UrlSet {
     /// The namespace for the \<urlset\>.
     pub xmlns: String,
 
-    /// A namespace extension for allowing \<image\> in the UrlSet.
+    /// A namespace extension for allowing \<image\> in the `UrlSet`.
     pub xmlns_image: Option<String>,
 
-    /// A namespace extension for allowing \<video\> in the UrlSet.
+    /// A namespace extension for allowing \<video\> in the `UrlSet`.
     pub xmlns_video: Option<String>,
 
-    /// A namespace extension for allowing \<news\> in the UrlSet.
+    /// A namespace extension for allowing \<news\> in the `UrlSet`.
     pub xmlns_news: Option<String>,
 
     /// All the URLs that will become indexed.
