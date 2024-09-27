@@ -10,10 +10,7 @@ description = "A Rust library to generate URL, Index, Image, Video, and News sit
 license = "MIT"
 keywords = ["sitemap", "index-sitemap", "image-sitemap", "video-sitemap", "news-sitemap"]
 categories = ["web-programming", "parsing"]
-exclude = [
-    ".idea/*",
-    ".github/*",
-]
+include = ["**/*.rs", "Cargo.toml", ".clippy.toml", "LICENSE", "README.md"]
 
 [lib]
 path = "src/lib.rs"
