@@ -247,8 +247,6 @@ This library **cannot** parse sitemaps of any kind (yet! - pull requests welcome
 
 **Project is under active maintenance - even if there are no recent commits! Please submit an issue / bug request if the library needs updating for any reason!**
 
-Built with: `Rust 1.65`
-
 ### Feature Requests
 
 #### Reading sitemap files (+ possible speed boost)
