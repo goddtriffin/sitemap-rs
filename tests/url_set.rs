@@ -6,9 +6,11 @@ use sitemap_rs::url_set_error::UrlSetError;
 
 #[test]
 fn test_constructor_only_required_fields() {
-    let urls: Vec<Url> = vec![Url::builder(String::from("https://www.toddgriffin.me/"))
-        .build()
-        .expect("failed a <url> validation")];
+    let urls: Vec<Url> = vec![
+        Url::builder(String::from("https://www.toddgriffin.me/"))
+            .build()
+            .expect("failed a <url> validation"),
+    ];
 
     let url_set_result: Result<UrlSet, UrlSetError> = UrlSet::new(urls);
     assert!(url_set_result.is_ok());
@@ -37,12 +39,11 @@ fn test_constructor_too_many_urls() {
 #[test]
 fn test_constructor_too_much_news() {
     let news: News = News::new(
-        Publication::new(
-            String::from("The Todd Times"),
-            String::from("en"),
-        ),
+        Publication::new(String::from("The Todd Times"), String::from("en")),
         DateTime::from(Utc::now()),
-        String::from("Local Software Engineer, Todd, Finally Completes Project He Has Talked About For Years")
+        String::from(
+            "Local Software Engineer, Todd, Finally Completes Project He Has Talked About For Years",
+        ),
     );
 
     let mut urls: Vec<Url> = vec![];
@@ -66,9 +67,11 @@ fn test_constructor_too_much_news() {
 
 #[test]
 fn test_write() {
-    let urls: Vec<Url> = vec![Url::builder(String::from("https://www.toddgriffin.me/"))
-        .build()
-        .expect("failed a <url> validation")];
+    let urls: Vec<Url> = vec![
+        Url::builder(String::from("https://www.toddgriffin.me/"))
+            .build()
+            .expect("failed a <url> validation"),
+    ];
 
     let url_set: UrlSet = UrlSet::new(urls).unwrap();
 

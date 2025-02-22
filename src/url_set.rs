@@ -2,7 +2,7 @@ use crate::url::Url;
 use crate::url_set_error::UrlSetError;
 use crate::{ENCODING, IMAGE_NAMESPACE, NAMESPACE, NEWS_NAMESPACE, VIDEO_NAMESPACE};
 use std::io::Write;
-use xml_builder::{XMLBuilder, XMLElement, XMLError, XMLVersion, XML};
+use xml_builder::{XML, XMLBuilder, XMLElement, XMLError, XMLVersion};
 
 /// Encapsulates the file and references the current protocol standard.
 pub struct UrlSet {

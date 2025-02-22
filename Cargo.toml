@@ -1,14 +1,20 @@
 [package]
 name = "sitemap-rs"
-version = "0.2.2"
-edition = "2021"
-rust-version = "1.81"
+version = "0.3.0"
+edition = "2024"
+rust-version = "1.85"
 authors = ["Todd Everett Griffin <tgriffin115@gmail.com>"]
 repository = "https://github.com/goddtriffin/sitemap-rs"
 homepage = "https://www.toddgriffin.me/"
 description = "A Rust library to generate URL, Index, Image, Video, and News sitemaps."
 license = "MIT"
-keywords = ["sitemap", "index-sitemap", "image-sitemap", "video-sitemap", "news-sitemap"]
+keywords = [
+  "sitemap",
+  "index-sitemap",
+  "image-sitemap",
+  "video-sitemap",
+  "news-sitemap",
+]
 categories = ["web-programming", "parsing"]
 include = ["**/*.rs", "Cargo.toml", ".clippy.toml", "LICENSE", "README.md"]
 
@@ -20,7 +26,7 @@ unsafe_code = { level = "forbid", priority = 0 }
 unfulfilled_lint_expectations = { level = "forbid", priority = 1 }
 
 [lints.clippy]
-allow_attributes = { level = "forbid", priority = 1}
+allow_attributes = { level = "forbid", priority = 1 }
 nursery = { level = "allow", priority = 0 }
 all = { level = "deny", priority = -1 }
 correctness = { level = "deny", priority = -1 }

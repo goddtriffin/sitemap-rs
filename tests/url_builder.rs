@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use sitemap_rs::image::Image;
 use sitemap_rs::news::{News, Publication};
-use sitemap_rs::url::{ChangeFrequency, Url, DEFAULT_PRIORITY};
+use sitemap_rs::url::{ChangeFrequency, DEFAULT_PRIORITY, Url};
 use sitemap_rs::url_builder::UrlBuilder;
 use sitemap_rs::url_error::UrlError;
 use sitemap_rs::video::Video;

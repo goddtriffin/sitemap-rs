@@ -2,7 +2,7 @@ use crate::sitemap::Sitemap;
 use crate::sitemap_index_error::SitemapIndexError;
 use crate::{ENCODING, NAMESPACE};
 use std::io::Write;
-use xml_builder::{XMLBuilder, XMLElement, XMLError, XMLVersion, XML};
+use xml_builder::{XML, XMLBuilder, XMLElement, XMLError, XMLVersion};
 
 /// Encapsulates information about all the Sitemaps in the file.
 pub struct SitemapIndex {

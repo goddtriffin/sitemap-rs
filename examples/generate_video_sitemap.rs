@@ -60,12 +60,14 @@ fn main() {
     .build()
     .expect("failed a <video:video> validation");
 
-    let urls: Vec<Url> = vec![Url::builder(String::from(
-        "http://www.example.com/videos/some_video_landing_page.html",
-    ))
-    .videos(vec![video])
-    .build()
-    .expect("failed a <url> validation")];
+    let urls: Vec<Url> = vec![
+        Url::builder(String::from(
+            "http://www.example.com/videos/some_video_landing_page.html",
+        ))
+        .videos(vec![video])
+        .build()
+        .expect("failed a <url> validation"),
+    ];
 
     let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
     let mut buf = Vec::<u8>::new();
