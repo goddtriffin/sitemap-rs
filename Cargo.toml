@@ -38,5 +38,5 @@ pedantic = { level = "deny", priority = -1 }
 cargo = { level = "deny", priority = -1 }
 
 [dependencies]
-xml-builder = "0.5.3"
-chrono = "0.4.38"
+xml-builder = "0.5.4"
+chrono = "0.4.39"
