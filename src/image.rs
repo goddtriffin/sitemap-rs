@@ -32,21 +32,27 @@ impl Image {
         }
     }
 
-    /// Builder methods for optional fields
-    pub fn caption(mut self, caption: impl Into<String>) -> Self {
-        self.caption = Some(caption.into());
+    /// Set the caption.
+    pub fn caption(mut self, caption: String) -> Self {
+        self.caption = Some(caption);
         self
     }
-    pub fn geo_location(mut self, geo_location: impl Into<String>) -> Self {
-        self.geo_location = Some(geo_location.into());
+
+    /// Set the geographical location.
+    pub fn geo_location(mut self, geo_location: String) -> Self {
+        self.geo_location = Some(geo_location);
         self
     }
-    pub fn title(mut self, title: impl Into<String>) -> Self {
-        self.title = Some(title.into());
+
+    /// Set the title.
+    pub fn title(mut self, title: String) -> Self {
+        self.title = Some(title);
         self
     }
-    pub fn license(mut self, license: impl Into<String>) -> Self {
-        self.license = Some(license.into());
+
+    /// Set the license URL.
+    pub fn license(mut self, license: String) -> Self {
+        self.license = Some(license);
         self
     }
 
