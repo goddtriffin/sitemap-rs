@@ -2,13 +2,14 @@ extern crate core;
 
 use chrono::{DateTime, Utc};
 use sitemap_rs::image::Image;
-use sitemap_rs::url::{ChangeFrequency, DEFAULT_PRIORITY, Url};
+use sitemap_rs::url::{ChangeFrequency, DEFAULT_PRIORITY, Url, UrlLink};
 use sitemap_rs::url_error::UrlError;
 
 #[test]
 fn test_constructor_only_required_fields() {
     let url_result: Result<Url, UrlError> = Url::new(
         String::from("https://www.toddgriffin.me/"),
+        vec![],
         None,
         None,
         None,
@@ -23,6 +24,10 @@ fn test_constructor_only_required_fields() {
 fn test_constructor_all_normal_fields() {
     let url_result: Result<Url, UrlError> = Url::new(
         String::from("https://www.toddgriffin.me/"),
+        vec![UrlLink::new(
+            "de".to_owned(),
+            "https://www.toddgriffin.me/de".to_owned(),
+        )],
         Some(DateTime::from(Utc::now())),
         Some(ChangeFrequency::Weekly),
         Some(DEFAULT_PRIORITY),
@@ -37,6 +42,7 @@ fn test_constructor_all_normal_fields() {
 fn test_constructor_priority_too_low() {
     let url_result: Result<Url, UrlError> = Url::new(
         String::from("https://www.toddgriffin.me/"),
+        vec![],
         Some(DateTime::from(Utc::now())),
         Some(ChangeFrequency::Weekly),
         Some(-1.0),
@@ -61,6 +67,7 @@ fn test_constructor_priority_too_low() {
 fn test_constructor_priority_too_high() {
     let url_result: Result<Url, UrlError> = Url::new(
         String::from("https://www.toddgriffin.me/"),
+        vec![],
         Some(DateTime::from(Utc::now())),
         Some(ChangeFrequency::Weekly),
         Some(4.69),
@@ -94,6 +101,7 @@ fn test_constructor_too_many_images() {
 
     let url_result: Result<Url, UrlError> = Url::new(
         String::from("https://www.toddgriffin.me/"),
+        vec![],
         Some(DateTime::from(Utc::now())),
         Some(ChangeFrequency::Weekly),
         Some(DEFAULT_PRIORITY),

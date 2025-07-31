@@ -56,6 +56,7 @@ pub mod video_builder;
 pub mod video_error;
 
 pub const NAMESPACE: &str = "http://www.sitemaps.org/schemas/sitemap/0.9";
+pub const XHTML_NAMESPACE: &str = "http://www.w3.org/1999/xhtml";
 pub const IMAGE_NAMESPACE: &str = "http://www.google.com/schemas/sitemap-image/1.1";
 pub const VIDEO_NAMESPACE: &str = "http://www.google.com/schemas/sitemap-video/1.1";
 pub const NEWS_NAMESPACE: &str = "http://www.google.com/schemas/sitemap-news/0.9";

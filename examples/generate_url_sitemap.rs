@@ -1,10 +1,14 @@
 use chrono::{DateTime, FixedOffset, NaiveDate};
-use sitemap_rs::url::{ChangeFrequency, Url};
+use sitemap_rs::url::{ChangeFrequency, Url, UrlLink};
 use sitemap_rs::url_set::UrlSet;
 
 fn main() {
     let urls: Vec<Url> = vec![
         Url::builder(String::from("http://www.example.com/"))
+            .links(vec![UrlLink::new(
+                "de".to_owned(),
+                "http://www.example.com/de".to_owned(),
+            )])
             .last_modified(DateTime::from_naive_utc_and_offset(
                 NaiveDate::from_ymd_opt(2005, 1, 1)
                     .unwrap()

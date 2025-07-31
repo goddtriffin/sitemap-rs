@@ -16,9 +16,12 @@ pub const DEFAULT_PRIORITY: f32 = 0.5;
 pub struct Url {
     /// URL of the page.
     ///
-    /// This URL must begin with the protocol (such as http) and end with a trailing slash, if your web server requires it.
+    /// This URL must begin with the protocol (such as http)
     /// This value must be less than 2,048 characters.
     pub location: String,
+
+    /// URLs of alternative hreflang links
+    pub links: Vec<UrlLink>,
 
     /// The date of last modification of the page.
     ///
@@ -65,8 +68,10 @@ impl Url {
     /// Will return `UrlError::PriorityTooLow` if `priority` is below `0.0`.
     /// Will return `UrlError::PriorityTooHigh` if `priority` is above `1.0`.
     /// Will return `UrlError::TooManyImages` if the length of `images` is above `1,000`.
+    #[expect(clippy::too_many_arguments)]
     pub fn new(
         location: String,
+        links: Vec<UrlLink>,
         last_modified: Option<DateTime<FixedOffset>>,
         change_frequency: Option<ChangeFrequency>,
         priority: Option<f32>,
@@ -102,6 +107,7 @@ impl Url {
 
         Ok(Self {
             location,
+            links,
             last_modified,
             change_frequency,
             priority,
@@ -126,6 +132,15 @@ impl Url {
         let mut loc: XMLElement = XMLElement::new("loc");
         loc.add_text(self.location)?;
         url.add_child(loc)?;
+
+        // add <xhtml:link>, if any exists
+        for link in self.links {
+            let mut xhtml_link = XMLElement::new("xhtml:link");
+            xhtml_link.add_attribute("rel", "alternate");
+            xhtml_link.add_attribute("hreflang", &link.hreflang);
+            xhtml_link.add_attribute("href", &link.href);
+            url.add_child(xhtml_link)?;
+        }
 
         // add <lastmod>, if it exists
         if let Some(last_modified) = self.last_modified {
@@ -169,6 +184,26 @@ impl Url {
         }
 
         Ok(url)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct UrlLink {
+    // Locale of the link
+    // TODO: Use a predefined list of all possible locales?
+    // If not, then consider using small string optimization
+    pub hreflang: String,
+    /// URL of alternative hreflang link
+    ///
+    /// This URL must begin with the protocol (such as http)
+    /// This value must be less than 2,048 characters.
+    pub href: String,
+}
+
+impl UrlLink {
+    #[must_use]
+    pub fn new(hreflang: String, href: String) -> Self {
+        Self { hreflang, href }
     }
 }
 
