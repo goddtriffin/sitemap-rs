@@ -1,6 +1,8 @@
 use crate::url::Url;
 use crate::url_set_error::UrlSetError;
-use crate::{ENCODING, IMAGE_NAMESPACE, NAMESPACE, NEWS_NAMESPACE, VIDEO_NAMESPACE};
+use crate::{
+    ENCODING, IMAGE_NAMESPACE, NAMESPACE, NEWS_NAMESPACE, VIDEO_NAMESPACE, XHTML_NAMESPACE,
+};
 use std::io::Write;
 use xml_builder::{XML, XMLBuilder, XMLElement, XMLError, XMLVersion};
 
@@ -14,6 +16,9 @@ pub struct UrlSet {
 
     /// The namespace for the \<urlset\>.
     pub xmlns: String,
+
+    /// A namespace extension for allowing \<image\> in the `UrlSet`.
+    pub xmlns_xhtml: Option<String>,
 
     /// A namespace extension for allowing \<image\> in the `UrlSet`.
     pub xmlns_image: Option<String>,
@@ -39,11 +44,17 @@ impl UrlSet {
         }
 
         // check if we even need namespaces for images/videos/news
+        let mut xmlns_xhtml: Option<String> = None;
         let mut xmlns_image: Option<String> = None;
         let mut xmlns_video: Option<String> = None;
         let mut xmlns_news: Option<String> = None;
         let mut news_exists: bool = false;
         for url in &urls {
+            // if any <url>s exist that contain alternate links, set the xhtml namespace
+            if !url.links.is_empty() {
+                xmlns_xhtml = Some(XHTML_NAMESPACE.to_string());
+            }
+
             // if any <url>s exist that contain an image, set the image namespace
             if let Some(images) = &url.images {
                 if !images.is_empty() {
@@ -76,6 +87,7 @@ impl UrlSet {
             xml_version: XMLVersion::XML1_0,
             xml_encoding: ENCODING.to_string(),
             xmlns: NAMESPACE.to_string(),
+            xmlns_xhtml,
             xmlns_image,
             xmlns_video,
             xmlns_news,
@@ -96,6 +108,11 @@ impl UrlSet {
         // create <urlset>
         let mut urlset = XMLElement::new("urlset");
         urlset.add_attribute("xmlns", self.xmlns.as_str());
+
+        // set xhtml namespace, if it exists
+        if let Some(xmlns_xhtml) = self.xmlns_xhtml {
+            urlset.add_attribute("xmlns:xhtml", xmlns_xhtml.as_str());
+        }
 
         // set image namespace, if it exists
         if let Some(xmlns_image) = self.xmlns_image {

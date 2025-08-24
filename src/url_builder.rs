@@ -1,6 +1,6 @@
 use crate::image::Image;
 use crate::news::News;
-use crate::url::{ChangeFrequency, Url};
+use crate::url::{ChangeFrequency, Url, UrlLink};
 use crate::url_error::UrlError;
 use crate::video::Video;
 use chrono::{DateTime, FixedOffset};
@@ -12,9 +12,12 @@ use chrono::{DateTime, FixedOffset};
 pub struct UrlBuilder {
     /// URL of the page.
     ///
-    /// This URL must begin with the protocol (such as http) and end with a trailing slash, if your web server requires it.
+    /// This URL must begin with the protocol (such as http)
     /// This value must be less than 2,048 characters.
     pub location: String,
+
+    /// URLs of alternative hreflang links
+    pub links: Vec<UrlLink>,
 
     /// The date of last modification of the page.
     ///
@@ -60,6 +63,7 @@ impl UrlBuilder {
     pub const fn new(location: String) -> Self {
         Self {
             location,
+            links: vec![],
             last_modified: None,
             change_frequency: None,
             priority: None,
@@ -67,6 +71,11 @@ impl UrlBuilder {
             videos: None,
             news: None,
         }
+    }
+
+    pub fn links(&mut self, links: impl IntoIterator<Item = UrlLink>) -> &mut Self {
+        self.links = links.into_iter().collect();
+        self
     }
 
     pub fn last_modified(&mut self, last_modified: DateTime<FixedOffset>) -> &mut Self {
@@ -107,6 +116,7 @@ impl UrlBuilder {
     pub fn build(&self) -> Result<Url, UrlError> {
         Url::new(
             self.location.clone(),
+            self.links.clone(),
             self.last_modified,
             self.change_frequency,
             self.priority,
