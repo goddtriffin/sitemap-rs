@@ -1,16 +1,16 @@
 use chrono::{DateTime, FixedOffset, NaiveDate};
 use sitemap_rs::video::{Platform, PlatformType, Relationship, Restriction, Uploader, Video};
 use sitemap_rs::video_error::VideoError;
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 
 #[test]
 fn test_constructor_only_required_fields() {
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         None,
         None,
         None,
@@ -30,11 +30,11 @@ fn test_constructor_only_required_fields() {
 #[test]
 fn test_constructor_all_fields() {
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         Some(600),
         Some(DateTime::from_naive_utc_and_offset(
             NaiveDate::from_ymd_opt(2021, 11, 5)
@@ -46,15 +46,15 @@ fn test_constructor_all_fields() {
         Some(4.2),
         Some(12345),
         Some(DateTime::from_naive_utc_and_offset(
-            NaiveDate::from_ymd_opt(2007, 11, 5)
+            NaiveDate::from_ymd_opt(1998, 1, 15)
                 .unwrap()
-                .and_hms_opt(11, 20, 30)
+                .and_hms_opt(4, 20, 0)
                 .unwrap(),
             FixedOffset::east_opt(8 * 3600).unwrap(),
         )),
         Some(true),
         Some(Restriction::new(
-            HashSet::from([
+            BTreeSet::from([
                 String::from("IE"),
                 String::from("GB"),
                 String::from("US"),
@@ -63,14 +63,14 @@ fn test_constructor_all_fields() {
             Relationship::Allow,
         )),
         Some(Platform::new(
-            HashSet::from([PlatformType::Web, PlatformType::Tv]),
+            BTreeSet::from([PlatformType::Web, PlatformType::Tv]),
             Relationship::Allow,
         )),
         Some(true),
         Some(Uploader::new(
             String::from("GrillyMcGrillserson"),
             Some(String::from(
-                "http://www.example.com/users/grillymcgrillerson",
+                "https://www.toddgriffin.me/users/grillymcgrillerson",
             )),
         )),
         Some(false),
@@ -92,11 +92,11 @@ fn test_constructor_description_too_long() {
     }
 
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         description,
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         None,
         None,
         None,
@@ -128,11 +128,11 @@ fn test_constructor_description_too_long() {
 #[test]
 fn test_constructor_duration_too_short() {
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         Some(0),
         None,
         None,
@@ -164,11 +164,11 @@ fn test_constructor_duration_too_short() {
 #[test]
 fn test_constructor_duration_too_long() {
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         Some(28_801),
         None,
         None,
@@ -200,11 +200,11 @@ fn test_constructor_duration_too_long() {
 #[test]
 fn test_constructor_rating_too_low() {
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         None,
         None,
         Some(-1.0),
@@ -239,11 +239,11 @@ fn test_constructor_rating_too_low() {
 #[test]
 fn test_constructor_rating_too_high() {
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         None,
         None,
         Some(6.69),
@@ -284,11 +284,11 @@ fn test_constructor_uploader_name_too_long() {
     let uploader: Uploader = Uploader::new(uploader_name, None);
 
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         None,
         None,
         None,
@@ -325,11 +325,11 @@ fn test_constructor_too_many_tags() {
     }
 
     let video_result: Result<Video, VideoError> = Video::new(
-        String::from("http://www.example.com/thumbs/123.jpg"),
+        String::from("https://www.toddgriffin.me/thumbs/123.jpg"),
         String::from("Grilling steaks for summer"),
         String::from("Alkis shows you how to get perfectly done steaks every time"),
-        String::from("http://streamserver.example.com/video123.mp4"),
-        String::from("http://www.example.com/videoplayer.php?video=123"),
+        String::from("https://www.toddgriffin.me/video123.mp4"),
+        String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         None,
         None,
         None,

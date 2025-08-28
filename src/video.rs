@@ -2,7 +2,7 @@ use crate::video_builder::VideoBuilder;
 use crate::video_error::VideoError;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
 use chrono::{DateTime, FixedOffset};
-use std::collections::HashSet;
+use std::collections::BTreeSet;
 use std::fmt::{Display, Formatter};
 use xml_builder::{XMLElement, XMLError};
 
@@ -350,7 +350,7 @@ impl Video {
 #[derive(Debug, Clone)]
 pub struct Restriction {
     /// Specify a space-delimited list of country codes in ISO 3166 format.
-    pub country_codes: HashSet<String>,
+    pub country_codes: BTreeSet<String>,
 
     /// Whether the video is allowed or denied in search results in the specified countries.
     /// Supported values are allow or deny.
@@ -360,7 +360,7 @@ pub struct Restriction {
 
 impl Restriction {
     #[must_use]
-    pub const fn new(country_codes: HashSet<String>, relationship: Relationship) -> Self {
+    pub const fn new(country_codes: BTreeSet<String>, relationship: Relationship) -> Self {
         Self {
             country_codes,
             relationship,
@@ -411,7 +411,7 @@ impl Display for Relationship {
 /// Note that this only affects search results on the specified device types; it does not prevent a user from playing your video on a restricted platform.
 #[derive(Debug, Clone)]
 pub struct Platform {
-    pub platforms: HashSet<PlatformType>,
+    pub platforms: BTreeSet<PlatformType>,
 
     /// Specifies whether the video is restricted or permitted for the specified platforms.
     /// Supported values are allow or deny.
@@ -421,7 +421,7 @@ pub struct Platform {
 
 impl Platform {
     #[must_use]
-    pub const fn new(platforms: HashSet<PlatformType>, relationship: Relationship) -> Self {
+    pub const fn new(platforms: BTreeSet<PlatformType>, relationship: Relationship) -> Self {
         Self {
             platforms,
             relationship,
@@ -450,23 +450,23 @@ impl Platform {
     }
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum PlatformType {
-    /// Traditional computer browsers on desktops and laptops.
-    Web,
     /// Mobile browsers, such as those on cellular phones or tablets.
     Mobile,
     /// TV browsers, such as those available through `GoogleTV` devices and game consoles.
     Tv,
+    /// Traditional computer browsers on desktops and laptops.
+    Web,
 }
 
 impl PlatformType {
     #[must_use]
     pub const fn as_str(&self) -> &str {
         match self {
-            Self::Web => "web",
             Self::Mobile => "mobile",
             Self::Tv => "tv",
+            Self::Web => "web",
         }
     }
 }

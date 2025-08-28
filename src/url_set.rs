@@ -17,7 +17,7 @@ pub struct UrlSet {
     /// The namespace for the \<urlset\>.
     pub xmlns: String,
 
-    /// A namespace extension for allowing \<image\> in the `UrlSet`.
+    /// A namespace extension for allowing \<xhtml:link\> (alternate language links) in the `UrlSet`.
     pub xmlns_xhtml: Option<String>,
 
     /// A namespace extension for allowing \<image\> in the `UrlSet`.
@@ -43,30 +43,30 @@ impl UrlSet {
             return Err(UrlSetError::TooManyUrls(urls.len()));
         }
 
-        // check if we even need namespaces for images/videos/news
+        // check if we even need namespaces for alternative language links, images, videos, or news
         let mut xmlns_xhtml: Option<String> = None;
         let mut xmlns_image: Option<String> = None;
         let mut xmlns_video: Option<String> = None;
         let mut xmlns_news: Option<String> = None;
         let mut news_exists: bool = false;
         for url in &urls {
-            // if any <url>s exist that contain alternate links, set the xhtml namespace
+            // if any <url>s exist that contain alternate language links, set the xhtml namespace
             if !url.links.is_empty() {
                 xmlns_xhtml = Some(XHTML_NAMESPACE.to_string());
             }
 
             // if any <url>s exist that contain an image, set the image namespace
-            if let Some(images) = &url.images {
-                if !images.is_empty() {
-                    xmlns_image = Some(IMAGE_NAMESPACE.to_string());
-                }
+            if let Some(images) = &url.images
+                && !images.is_empty()
+            {
+                xmlns_image = Some(IMAGE_NAMESPACE.to_string());
             }
 
             // if any <url>s exist that contain a video, set the video namespace
-            if let Some(videos) = &url.videos {
-                if !videos.is_empty() {
-                    xmlns_video = Some(VIDEO_NAMESPACE.to_string());
-                }
+            if let Some(videos) = &url.videos
+                && !videos.is_empty()
+            {
+                xmlns_video = Some(VIDEO_NAMESPACE.to_string());
             }
 
             // check if any URLs have news
@@ -144,7 +144,7 @@ impl UrlSet {
     /// Will return `XMLError` if there is an IO Error dealing with the
     /// underlying writer or if there is an error generating XML.
     pub fn write<W: Write>(self, writer: W) -> Result<(), XMLError> {
-        let xml = self.to_xml()?;
+        let xml: XML = self.to_xml()?;
         xml.generate(writer)
     }
 }

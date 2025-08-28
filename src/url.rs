@@ -8,7 +8,7 @@ use chrono::{DateTime, FixedOffset};
 use std::fmt::{Display, Formatter};
 use xml_builder::{XMLElement, XMLError};
 
-/// The default priority of a sitemap.xml <url>.
+/// The default `priority` of a sitemap.xml <url>.
 pub const DEFAULT_PRIORITY: f32 = 0.5;
 
 /// A \<url\> entry within a sitemap.xml.
@@ -16,12 +16,12 @@ pub const DEFAULT_PRIORITY: f32 = 0.5;
 pub struct Url {
     /// URL of the page.
     ///
-    /// This URL must begin with the protocol (such as http)
+    /// This URL must begin with the protocol (such as http) and end with a trailing slash, if your web server requires it.
     /// This value must be less than 2,048 characters.
     pub location: String,
 
     /// URLs of alternative hreflang links
-    pub links: Vec<UrlLink>,
+    pub links: Vec<Link>,
 
     /// The date of last modification of the page.
     ///
@@ -65,13 +65,14 @@ pub struct Url {
 impl Url {
     /// # Errors
     ///
+    /// Will return `UrlError::LocationTooLong` if `location` is 2,048 characters or more.
     /// Will return `UrlError::PriorityTooLow` if `priority` is below `0.0`.
     /// Will return `UrlError::PriorityTooHigh` if `priority` is above `1.0`.
     /// Will return `UrlError::TooManyImages` if the length of `images` is above `1,000`.
     #[expect(clippy::too_many_arguments)]
     pub fn new(
         location: String,
-        links: Vec<UrlLink>,
+        links: Vec<Link>,
         last_modified: Option<DateTime<FixedOffset>>,
         change_frequency: Option<ChangeFrequency>,
         priority: Option<f32>,
@@ -79,6 +80,11 @@ impl Url {
         videos: Option<Vec<Video>>,
         news: Option<News>,
     ) -> Result<Self, UrlError> {
+        // make sure location is less than 2,048 characters
+        if location.len() >= 2048 {
+            return Err(UrlError::LocationTooLong(location));
+        }
+
         // make sure priority is within bounds: 0.0 <= priority <= 1.0
         if let Some(p) = priority {
             if p < 0.0 {
@@ -188,7 +194,7 @@ impl Url {
 }
 
 #[derive(Debug, Clone)]
-pub struct UrlLink {
+pub struct Link {
     // Locale of the link
     // TODO: Use a predefined list of all possible locales?
     // If not, then consider using small string optimization
@@ -200,7 +206,7 @@ pub struct UrlLink {
     pub href: String,
 }
 
-impl UrlLink {
+impl Link {
     #[must_use]
     pub fn new(hreflang: String, href: String) -> Self {
         Self { hreflang, href }

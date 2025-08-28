@@ -66,7 +66,7 @@ impl SitemapIndex {
     /// Will return `XMLError` if there is an IO Error dealing with the
     /// underlying writer or if there is an error generating XML.
     pub fn write<W: Write>(self, writer: W) -> Result<(), XMLError> {
-        let xml = self.to_xml()?;
+        let xml: XML = self.to_xml()?;
         xml.generate(writer)
     }
 }

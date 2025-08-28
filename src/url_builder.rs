@@ -1,6 +1,6 @@
 use crate::image::Image;
 use crate::news::News;
-use crate::url::{ChangeFrequency, Url, UrlLink};
+use crate::url::{ChangeFrequency, Link, Url};
 use crate::url_error::UrlError;
 use crate::video::Video;
 use chrono::{DateTime, FixedOffset};
@@ -12,12 +12,12 @@ use chrono::{DateTime, FixedOffset};
 pub struct UrlBuilder {
     /// URL of the page.
     ///
-    /// This URL must begin with the protocol (such as http)
+    /// This URL must begin with the protocol (such as http) and end with a trailing slash, if your web server requires it.
     /// This value must be less than 2,048 characters.
     pub location: String,
 
     /// URLs of alternative hreflang links
-    pub links: Vec<UrlLink>,
+    pub links: Vec<Link>,
 
     /// The date of last modification of the page.
     ///
@@ -73,7 +73,7 @@ impl UrlBuilder {
         }
     }
 
-    pub fn links(&mut self, links: impl IntoIterator<Item = UrlLink>) -> &mut Self {
+    pub fn links(&mut self, links: impl IntoIterator<Item = Link>) -> &mut Self {
         self.links = links.into_iter().collect();
         self
     }

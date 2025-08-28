@@ -1,10 +1,10 @@
 use chrono::{DateTime, Utc};
-use sitemap_rs::image::Image;
 use sitemap_rs::news::{News, Publication};
 use sitemap_rs::url::{ChangeFrequency, DEFAULT_PRIORITY, Url};
 use sitemap_rs::url_builder::UrlBuilder;
 use sitemap_rs::url_error::UrlError;
 use sitemap_rs::video::Video;
+use sitemap_rs::{image::Image, url::Link};
 
 #[test]
 fn test_only_required_fields() {
@@ -28,6 +28,10 @@ fn test_all_normal_fields() {
 fn test_all_fields() {
     let url_builder_result: Result<Url, UrlError> =
         UrlBuilder::new(String::from("https://www.toddgriffin.me/"))
+            .links(vec![Link::new(
+                "de".to_owned(),
+                "https://www.toddgriffin.me/de".to_owned(),
+            )])
             .last_modified(DateTime::from(Utc::now()))
             .change_frequency(ChangeFrequency::Weekly)
             .priority(DEFAULT_PRIORITY)

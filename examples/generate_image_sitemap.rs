@@ -4,22 +4,23 @@ use sitemap_rs::url_set::UrlSet;
 
 fn main() {
     let urls: Vec<Url> = vec![
-        Url::builder(String::from("http://example.com/sample1.html"))
+        Url::builder(String::from("https://www.toddgriffin.me/sample1.html"))
             .images(vec![
-                Image::new(String::from("http://example.com/image.jpg")),
-                Image::new(String::from("http://example.com/photo.jpg")),
+                Image::new(String::from("https://www.toddgriffin.me/image.jpg")),
+                Image::new(String::from("https://www.toddgriffin.me/photo.jpg")),
             ])
             .build()
-            .expect("failed a <url> validation"),
-        Url::builder(String::from("http://example.com/sample2.html"))
+            .unwrap(),
+        Url::builder(String::from("https://www.toddgriffin.me/sample2.html"))
             .images(vec![Image::new(String::from(
-                "http://example.com/picture.jpg",
+                "https://www.toddgriffin.me/picture.jpg",
             ))])
             .build()
-            .expect("failed a <url> validation"),
+            .unwrap(),
     ];
 
-    let url_set: UrlSet = UrlSet::new(urls).expect("failed a <urlset> validation");
-    let mut buf = Vec::<u8>::new();
+    let url_set: UrlSet = UrlSet::new(urls).unwrap();
+    let mut buf: Vec<u8> = Vec::<u8>::new();
     url_set.write(&mut buf).unwrap();
+    println!("{}", String::from_utf8(buf).unwrap());
 }
