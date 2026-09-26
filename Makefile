@@ -57,4 +57,4 @@ bench_compare: ## runs benchmarks and compares them against baseline $(BASELINE)
 .PHONY: publish_dry_run
 publish_dry_run: ## dry run of publishing libraries to crates.io
 	cargo publish --package sitemap-rs --dry-run
-	cargo package --list
+	cargo package --package sitemap-rs --list

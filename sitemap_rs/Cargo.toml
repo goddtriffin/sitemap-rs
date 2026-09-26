@@ -1,0 +1,36 @@
+[package]
+name = "sitemap-rs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+readme.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
+include.workspace = true
+
+[lib]
+path = "src/lib.rs"
+
+[lints]
+workspace = true
+
+[dependencies]
+xml-builder.workspace = true
+chrono.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+dhat.workspace = true
+
+[[bench]]
+name = "sitemap"
+harness = false
+
+[[bench]]
+name = "alloc"
+harness = false
