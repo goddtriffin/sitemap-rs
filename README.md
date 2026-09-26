@@ -321,6 +321,50 @@ These are extremely high priority! Very open to contributions!
 - `make test`
 - `make fix`
 
+### Benchmarks
+
+Benchmarks measure what a user experiences: constructing a `UrlSet` or
+`SitemapIndex` from prepared data and writing it as XML into memory. They report
+wall-clock time (via [criterion](https://github.com/bheisler/criterion.rs)) and
+heap allocations (via [dhat](https://github.com/nnethercote/dhat-rs)).
+
+- `make bench`
+
+To compare a change against `main`:
+
+```sh
+git checkout main && make bench_save_baseline
+git checkout my-branch && make bench_compare
+```
+
+Use `BASELINE=<name>` to save/compare against a differently-named baseline.
+
+Run the two commands back-to-back on an idle machine that is plugged in. Separate
+runs of identical code drift by up to ~10% in wall-clock time, so timing changes
+smaller than that are reported as noise. Allocation counts are deterministic, so
+any change there is real.
+
+#### Results
+
+Using `xml-builder` v0.6.0, median of 5 runs.
+
+Hardware: MacBook Pro (Mac15,9), Apple M3 Max (12 performance + 4 efficiency
+cores), 64 GB RAM, macOS 26.6.2, on AC power. Rust 1.98.1.
+
+| Scenario            | Output size | Time    | Throughput | Allocations | Peak heap |
+|---------------------|-------------|---------|------------|-------------|-----------|
+| `url_set/plain_50k` | 8.1 MiB     | 32.3 ms | 252 MiB/s  | 750,055     | 41.3 MiB  |
+| `url_set/rich_1k`   | 1.9 MiB     | 8.3 ms  | 233 MiB/s  | 222,091     | 9.2 MiB   |
+| `sitemap_index/50k` | 6.5 MiB     | 21.0 ms | 311 MiB/s  | 450,054     | 32.4 MiB  |
+
+- `url_set/plain_50k`: 50,000 URLs with `<loc>`, `<lastmod>`, `<changefreq>`,
+  and `<priority>` (the largest allowed sitemap).
+- `url_set/rich_1k`: 1,000 URLs, each with hreflang links, images, a video, and
+  news (the largest allowed news sitemap).
+- `sitemap_index/50k`: 50,000 sitemaps (the largest allowed index sitemap).
+
+Update these results whenever a change affects performance.
+
 ## Credits
 
 Made by [Todd Everett Griffin](https://www.toddgriffin.me/).
