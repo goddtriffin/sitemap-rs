@@ -346,16 +346,16 @@ any change there is real.
 
 #### Results
 
-`sitemap-rs` v0.4.0 (`xml-builder` v0.5.4), median of 6 runs.
+Using `xml-builder` v0.6.0, median of 5 runs.
 
 Hardware: MacBook Pro (Mac15,9), Apple M3 Max (12 performance + 4 efficiency
 cores), 64 GB RAM, macOS 26.6.2, on AC power. Rust 1.98.1.
 
 | Scenario            | Output size | Time    | Throughput | Allocations | Peak heap |
 |---------------------|-------------|---------|------------|-------------|-----------|
-| `url_set/plain_50k` | 8.1 MiB     | 30.1 ms | 270 MiB/s  | 750,055     | 41.3 MiB  |
-| `url_set/rich_1k`   | 1.9 MiB     | 7.6 ms  | 253 MiB/s  | 222,091     | 9.2 MiB   |
-| `sitemap_index/50k` | 6.5 MiB     | 18.8 ms | 347 MiB/s  | 450,054     | 32.4 MiB  |
+| `url_set/plain_50k` | 8.1 MiB     | 32.3 ms | 252 MiB/s  | 750,055     | 41.3 MiB  |
+| `url_set/rich_1k`   | 1.9 MiB     | 8.3 ms  | 233 MiB/s  | 222,091     | 9.2 MiB   |
+| `sitemap_index/50k` | 6.5 MiB     | 21.0 ms | 311 MiB/s  | 450,054     | 32.4 MiB  |
 
 - `url_set/plain_50k`: 50,000 URLs with `<loc>`, `<lastmod>`, `<changefreq>`,
   and `<priority>` (the largest allowed sitemap).

@@ -20,7 +20,7 @@ fn bench_sitemaps(c: &mut Criterion) {
         group.throughput(Throughput::Bytes(output.len() as u64));
         group.bench_function("write", |b| {
             b.iter_batched(
-                || (scenario.clone(), Vec::with_capacity(output.len())),
+                || (scenario.clone(), Vec::new()),
                 |(scenario, mut buf)| {
                     scenario.run(&mut buf);
                     buf
