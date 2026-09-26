@@ -1,6 +1,9 @@
 $(VERBOSE).SILENT:
 .DEFAULT_GOAL := help
 
+# name of the saved benchmark baseline to save to / compare against
+BASELINE ?= main
+
 .PHONY: help
 help: # Prints out help
 	@IFS=$$'\n' ; \
@@ -27,13 +30,29 @@ lint: ## lints the codebase
 test: ## runs tests
 	cargo fmt --check
 	cargo check
-	cargo clippy --tests
+	cargo clippy --all-targets
 	cargo test
 
 .PHONY: fix
 fix: ## fixes the codebase
 	cargo fix --allow-dirty --allow-staged
 	cargo clippy --fix --allow-dirty --allow-staged
+
+.PHONY: bench
+bench: ## runs benchmarks (timing and allocations)
+	cargo bench --bench sitemap
+	cargo bench --bench alloc
+
+.PHONY: bench_save_baseline
+bench_save_baseline: ## runs benchmarks and saves them as baseline $(BASELINE)
+	cargo bench --bench sitemap -- --save-baseline $(BASELINE)
+	cargo bench --bench alloc | tee target/alloc-$(BASELINE).txt
+
+.PHONY: bench_compare
+bench_compare: ## runs benchmarks and compares them against baseline $(BASELINE)
+	cargo bench --bench sitemap -- --baseline $(BASELINE)
+	cargo bench --bench alloc > target/alloc-current.txt
+	diff target/alloc-$(BASELINE).txt target/alloc-current.txt && echo "allocations: unchanged" || true
 
 .PHONY: publish_dry_run
 publish_dry_run: ## dry run of publishing libraries to crates.io
