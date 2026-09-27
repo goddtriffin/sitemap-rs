@@ -5,7 +5,8 @@
 //! `cargo run --example generate_url_sitemap`
 //!
 //! ```rust
-//! use chrono::{DateTime, FixedOffset, NaiveDate};
+//! use jiff::civil::date;
+//! use jiff::tz::TimeZone;
 //! use sitemap_rs::url::{ChangeFrequency, Link, Url};
 //! use sitemap_rs::url_set::UrlSet;
 //!
@@ -15,13 +16,12 @@
 //!             "de".to_owned(),
 //!             "https://www.toddgriffin.me/de".to_owned(),
 //!         )])
-//!         .last_modified(DateTime::from_naive_utc_and_offset(
-//!             NaiveDate::from_ymd_opt(1998, 1, 15)
-//!                 .unwrap()
-//!                 .and_hms_opt(4, 20, 0)
+//!         .last_modified(
+//!             date(1998, 1, 15)
+//!                 .at(4, 20, 0, 0)
+//!                 .to_zoned(TimeZone::UTC)
 //!                 .unwrap(),
-//!             FixedOffset::east_opt(0).unwrap(),
-//!         ))
+//!         )
 //!         .change_frequency(ChangeFrequency::Monthly)
 //!         .priority(0.69)
 //!         .build()
@@ -49,8 +49,14 @@
 //! ```
 //!
 //! For more examples, check out the `examples` directory within the repository.
+//!
+//! ## Dates
+//!
+//! Dates are [`jiff::Zoned`] values, which are written in W3C Datetime format with seconds
+//! precision (e.g. `1998-01-15T04:20:00+00:00`). `jiff` is re-exported as [`sitemap_rs::jiff`](jiff)
+//! so you can always use a version that matches this crate.
 
-use chrono::SecondsFormat;
+pub use jiff;
 
 pub mod image;
 pub mod news;
@@ -73,5 +79,3 @@ pub const IMAGE_NAMESPACE: &str = "http://www.google.com/schemas/sitemap-image/1
 pub const VIDEO_NAMESPACE: &str = "http://www.google.com/schemas/sitemap-video/1.1";
 pub const NEWS_NAMESPACE: &str = "http://www.google.com/schemas/sitemap-news/0.9";
 pub const ENCODING: &str = "UTF-8";
-pub const RFC_3339_SECONDS_FORMAT: SecondsFormat = SecondsFormat::Secs;
-pub const RFC_3339_USE_Z: bool = false;

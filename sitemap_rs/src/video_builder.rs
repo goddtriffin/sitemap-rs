@@ -1,6 +1,6 @@
 use crate::video::{Platform, Restriction, Uploader, Video};
 use crate::video_error::VideoError;
-use chrono::{DateTime, FixedOffset};
+use jiff::Zoned;
 
 /// A sitemap video.
 ///
@@ -53,7 +53,7 @@ pub struct VideoBuilder {
     /// Omit this tag if your video does not expire.
     /// If present, Google Search won't show your video after this date.
     /// For recurring videos at the same URL, update the expiration date to the new expiration date.
-    pub expiration_date: Option<DateTime<FixedOffset>>,
+    pub expiration_date: Option<Zoned>,
 
     /// The rating of the video.
     ///
@@ -64,7 +64,7 @@ pub struct VideoBuilder {
     pub view_count: Option<usize>,
 
     /// The date the video was first published, in W3C format.
-    pub publication_date: Option<DateTime<FixedOffset>>,
+    pub publication_date: Option<Zoned>,
 
     /// Whether the video is available with `SafeSearch`.
     ///
@@ -144,7 +144,7 @@ impl VideoBuilder {
         self
     }
 
-    pub fn expiration_date(&mut self, expiration_date: DateTime<FixedOffset>) -> &mut Self {
+    pub fn expiration_date(&mut self, expiration_date: Zoned) -> &mut Self {
         self.expiration_date = Some(expiration_date);
         self
     }
@@ -159,7 +159,7 @@ impl VideoBuilder {
         self
     }
 
-    pub fn publication_date(&mut self, publication_date: DateTime<FixedOffset>) -> &mut Self {
+    pub fn publication_date(&mut self, publication_date: Zoned) -> &mut Self {
         self.publication_date = Some(publication_date);
         self
     }
@@ -216,10 +216,10 @@ impl VideoBuilder {
             self.content_location.clone(),
             self.player_location.clone(),
             self.duration,
-            self.expiration_date,
+            self.expiration_date.clone(),
             self.rating,
             self.view_count,
-            self.publication_date,
+            self.publication_date.clone(),
             self.family_friendly,
             self.restriction.clone(),
             self.platform.clone(),

@@ -1,6 +1,5 @@
-use crate::xml::write_text_element;
-use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
-use chrono::{DateTime, FixedOffset};
+use crate::xml::{format_date, write_text_element};
+use jiff::Zoned;
 use quick_xml::Writer;
 use std::io::{self, Write};
 
@@ -18,12 +17,12 @@ pub struct Sitemap {
     /// The value for the lastmod tag should be in W3C Datetime format.
     /// By providing the last modification timestamp, you enable search engine crawlers to retrieve only a subset of the Sitemaps in the index i.e. a crawler may only retrieve Sitemaps that were modified since a certain date.
     /// This incremental Sitemap fetching mechanism allows for the rapid discovery of new URLs on very large sites.
-    pub last_modified: Option<DateTime<FixedOffset>>,
+    pub last_modified: Option<Zoned>,
 }
 
 impl Sitemap {
     #[must_use]
-    pub const fn new(location: String, last_modified: Option<DateTime<FixedOffset>>) -> Self {
+    pub const fn new(location: String, last_modified: Option<Zoned>) -> Self {
         Self {
             location,
             last_modified,
@@ -38,12 +37,8 @@ impl Sitemap {
                 write_text_element(writer, "loc", &self.location)?;
 
                 // add <lastmod>, if it exists
-                if let Some(last_modified) = self.last_modified {
-                    write_text_element(
-                        writer,
-                        "lastmod",
-                        &last_modified.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
-                    )?;
+                if let Some(last_modified) = &self.last_modified {
+                    write_text_element(writer, "lastmod", &format_date(last_modified))?;
                 }
 
                 Ok(())

@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use jiff::Zoned;
 use sitemap_rs::sitemap::Sitemap;
 
 #[test]
@@ -12,7 +12,7 @@ fn test_constructor_only_required_fields() {
 fn test_constructor_all_fields() {
     let sitemap: Sitemap = Sitemap::new(
         String::from("https://www.toddgriffin.me/sitemap.xml"),
-        Some(DateTime::from(Utc::now())),
+        Some(Zoned::now()),
     );
     assert!(sitemap.last_modified.is_some());
 }

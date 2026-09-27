@@ -21,9 +21,10 @@ workspace = true
 
 [dependencies]
 quick-xml.workspace = true
-chrono.workspace = true
+jiff = { workspace = true, features = ["std"] }
 
 [dev-dependencies]
+jiff = { workspace = true, features = ["default"] }
 criterion.workspace = true
 dhat.workspace = true
 

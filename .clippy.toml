@@ -1,1 +1,5 @@
 msrv = "1.89.0"
+
+# `syn` 2 comes from jiff's optional `jiff-static` proc-macro (unused: the `static` feature is off),
+# and `syn` 3 from criterion's `serde_derive` (dev-dependency). Neither is built into the library.
+allowed-duplicate-crates = ["syn"]

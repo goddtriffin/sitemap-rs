@@ -1,4 +1,5 @@
-use chrono::{DateTime, FixedOffset, NaiveDate};
+use jiff::civil::date;
+use jiff::tz::{TimeZone, offset};
 use sitemap_rs::video::{Platform, PlatformType, Relationship, Restriction, Uploader, Video};
 use sitemap_rs::video_error::VideoError;
 use std::collections::BTreeSet;
@@ -36,22 +37,20 @@ fn test_constructor_all_fields() {
         String::from("https://www.toddgriffin.me/video123.mp4"),
         String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
         Some(600),
-        Some(DateTime::from_naive_utc_and_offset(
-            NaiveDate::from_ymd_opt(2021, 11, 5)
-                .unwrap()
-                .and_hms_opt(11, 20, 30)
+        Some(
+            date(2021, 11, 5)
+                .at(19, 20, 30, 0)
+                .to_zoned(TimeZone::fixed(offset(8)))
                 .unwrap(),
-            FixedOffset::east_opt(8 * 3600).unwrap(),
-        )),
+        ),
         Some(4.2),
         Some(12345),
-        Some(DateTime::from_naive_utc_and_offset(
-            NaiveDate::from_ymd_opt(1998, 1, 15)
-                .unwrap()
-                .and_hms_opt(4, 20, 0)
+        Some(
+            date(1998, 1, 15)
+                .at(12, 20, 0, 0)
+                .to_zoned(TimeZone::fixed(offset(8)))
                 .unwrap(),
-            FixedOffset::east_opt(8 * 3600).unwrap(),
-        )),
+        ),
         Some(true),
         Some(Restriction::new(
             BTreeSet::from([
