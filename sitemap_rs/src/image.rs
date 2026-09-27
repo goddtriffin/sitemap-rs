@@ -1,4 +1,6 @@
-use xml_builder::{XMLElement, XMLError};
+use crate::xml::write_text_element;
+use quick_xml::Writer;
+use std::io::{self, Write};
 
 /// A sitemap image.
 #[derive(Debug, Clone)]
@@ -18,17 +20,13 @@ impl Image {
         Self { location }
     }
 
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XMLElement, XMLError> {
-        let mut image: XMLElement = XMLElement::new("image:image");
-
-        // add <image:loc>
-        let mut loc: XMLElement = XMLElement::new("image:loc");
-        loc.add_text(self.location)?;
-        image.add_child(loc)?;
-
-        Ok(image)
+    pub(crate) fn write_xml<W: Write>(&self, writer: &mut Writer<W>) -> io::Result<()> {
+        writer
+            .create_element("image:image")
+            .write_inner_content(|writer| {
+                // add <image:loc>
+                write_text_element(writer, "image:loc", &self.location)
+            })?;
+        Ok(())
     }
 }

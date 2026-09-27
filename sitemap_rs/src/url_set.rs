@@ -1,19 +1,11 @@
 use crate::url::Url;
 use crate::url_set_error::UrlSetError;
-use crate::{
-    ENCODING, IMAGE_NAMESPACE, NAMESPACE, NEWS_NAMESPACE, VIDEO_NAMESPACE, XHTML_NAMESPACE,
-};
-use std::io::Write;
-use xml_builder::{XML, XMLBuilder, XMLElement, XMLError, XMLVersion};
+use crate::xml::write_document;
+use crate::{IMAGE_NAMESPACE, NAMESPACE, NEWS_NAMESPACE, VIDEO_NAMESPACE, XHTML_NAMESPACE};
+use std::io::{self, Write};
 
 /// Encapsulates the file and references the current protocol standard.
 pub struct UrlSet {
-    /// The XML version.
-    pub xml_version: XMLVersion,
-
-    /// The XML encoding.
-    pub xml_encoding: String,
-
     /// The namespace for the \<urlset\>.
     pub xmlns: String,
 
@@ -84,8 +76,6 @@ impl UrlSet {
         }
 
         Ok(Self {
-            xml_version: XMLVersion::XML1_0,
-            xml_encoding: ENCODING.to_string(),
             xmlns: NAMESPACE.to_string(),
             xmlns_xhtml,
             xmlns_image,
@@ -95,56 +85,51 @@ impl UrlSet {
         })
     }
 
+    /// Writes this `UrlSet` as an XML document into `writer`.
+    ///
     /// # Errors
     ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XML, XMLError> {
-        // create XML document
-        let mut xml = XMLBuilder::new()
-            .version(self.xml_version)
-            .encoding(self.xml_encoding)
-            .build();
+    /// Will return `io::Error` if there is an IO Error dealing with the underlying writer.
+    pub fn write<W: Write>(&self, writer: W) -> io::Result<()> {
+        write_document(writer, |writer| {
+            // create <urlset>
+            let mut urlset = writer
+                .create_element("urlset")
+                .with_attribute(("xmlns", self.xmlns.as_str()));
 
-        // create <urlset>
-        let mut urlset = XMLElement::new("urlset");
-        urlset.add_attribute("xmlns", self.xmlns.as_str());
+            // set xhtml namespace, if it exists
+            if let Some(xmlns_xhtml) = &self.xmlns_xhtml {
+                urlset = urlset.with_attribute(("xmlns:xhtml", xmlns_xhtml.as_str()));
+            }
 
-        // set xhtml namespace, if it exists
-        if let Some(xmlns_xhtml) = self.xmlns_xhtml {
-            urlset.add_attribute("xmlns:xhtml", xmlns_xhtml.as_str());
-        }
+            // set image namespace, if it exists
+            if let Some(xmlns_image) = &self.xmlns_image {
+                urlset = urlset.with_attribute(("xmlns:image", xmlns_image.as_str()));
+            }
 
-        // set image namespace, if it exists
-        if let Some(xmlns_image) = self.xmlns_image {
-            urlset.add_attribute("xmlns:image", xmlns_image.as_str());
-        }
+            // set video namespace, if it exists
+            if let Some(xmlns_video) = &self.xmlns_video {
+                urlset = urlset.with_attribute(("xmlns:video", xmlns_video.as_str()));
+            }
 
-        // set video namespace, if it exists
-        if let Some(xmlns_video) = self.xmlns_video {
-            urlset.add_attribute("xmlns:video", xmlns_video.as_str());
-        }
+            // set news namespace, if it exists
+            if let Some(xmlns_news) = &self.xmlns_news {
+                urlset = urlset.with_attribute(("xmlns:news", xmlns_news.as_str()));
+            }
 
-        // set news namespace, if it exists
-        if let Some(xmlns_news) = self.xmlns_news {
-            urlset.add_attribute("xmlns:news", xmlns_news.as_str());
-        }
+            if self.urls.is_empty() {
+                urlset.write_empty()?;
+                return Ok(());
+            }
 
-        // add each <url>
-        for url in self.urls {
-            urlset.add_child(url.to_xml()?)?;
-        }
-
-        // set root element and we're done!
-        xml.set_root_element(urlset);
-        Ok(xml)
-    }
-
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is an IO Error dealing with the
-    /// underlying writer or if there is an error generating XML.
-    pub fn write<W: Write>(self, writer: W) -> Result<(), XMLError> {
-        let xml: XML = self.to_xml()?;
-        xml.generate(writer)
+            // add each <url>
+            urlset.write_inner_content(|writer| {
+                for url in &self.urls {
+                    url.write_xml(writer)?;
+                }
+                Ok(())
+            })?;
+            Ok(())
+        })
     }
 }

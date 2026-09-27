@@ -65,6 +65,7 @@ pub mod url_set_error;
 pub mod video;
 pub mod video_builder;
 pub mod video_error;
+mod xml;
 
 pub const NAMESPACE: &str = "http://www.sitemaps.org/schemas/sitemap/0.9";
 pub const XHTML_NAMESPACE: &str = "http://www.w3.org/1999/xhtml";

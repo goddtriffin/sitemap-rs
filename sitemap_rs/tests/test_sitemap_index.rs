@@ -35,6 +35,42 @@ fn test_write_all_fields() {
 }
 
 #[test]
+fn test_write_escapes_special_characters() {
+    let sitemaps: Vec<Sitemap> = vec![Sitemap::new(
+        String::from("https://www.toddgriffin.me/sitemap.xml?page=1&lang=en"),
+        None,
+    )];
+    let index_sitemap: SitemapIndex = SitemapIndex::new(sitemaps).unwrap();
+
+    let mut buf: Vec<u8> = Vec::<u8>::new();
+    index_sitemap.write(&mut buf).unwrap();
+    let actual: String = String::from_utf8(buf).unwrap();
+
+    let expected: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<sitemap>
+		<loc>https://www.toddgriffin.me/sitemap.xml?page=1&amp;lang=en</loc>
+	</sitemap>
+</sitemapindex>
+"#;
+    assert_eq!(expected, actual);
+}
+
+#[test]
+fn test_write_empty() {
+    let index_sitemap: SitemapIndex = SitemapIndex::new(vec![]).unwrap();
+
+    let mut buf: Vec<u8> = Vec::<u8>::new();
+    index_sitemap.write(&mut buf).unwrap();
+    let actual: String = String::from_utf8(buf).unwrap();
+
+    let expected: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" />
+"#;
+    assert_eq!(expected, actual);
+}
+
+#[test]
 fn test_constructor_only_required_fields() {
     let sitemaps: Vec<Sitemap> = vec![Sitemap::new(
         String::from("https://www.toddgriffin.me/sitemap.xml"),

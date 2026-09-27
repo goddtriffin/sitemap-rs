@@ -15,6 +15,9 @@ A Rust library to generate URL, Index, Image, Video, and News sitemaps.
 - [Video sitemaps](https://developers.google.com/search/docs/advanced/sitemaps/video-sitemaps)
 - [News sitemaps](https://developers.google.com/search/docs/advanced/sitemaps/news-sitemap)
 
+All text and attribute values are XML-escaped for you (e.g. `&` becomes `&amp;`),
+so pass plain, unescaped strings.
+
 ### Validates sitemap data
 
 There are a bunch of restrictions as to what data your sitemaps can hold. This
@@ -203,8 +206,6 @@ _This pro/con list is accurate as of the most recent update to this document._
 - Supports URL sitemaps
 - Supports writing files
 - Support builder pattern
-- uses [quick-xml](https://github.com/tafia/quick-xml), so it should be quite
-  fast
 - Some struct/method documentation
 
 #### Cons:
@@ -312,7 +313,7 @@ spec - it must be implemented!
 
 These are extremely high priority! Very open to contributions!
 
-- `Replace xml-builder dependency with quick-xml (faster + enable reading sitemaps)`: https://github.com/goddtriffin/sitemap-rs/issues/14
+- `Read and validate sitemaps`: https://github.com/goddtriffin/sitemap-rs/issues/14
 - `Add strict validations: ISO 3166 Country Code, ISO 639 Part 1 Language Code, ISO 15924 Language Script Variations`: https://github.com/goddtriffin/sitemap-rs/issues/15
 
 ### Commands

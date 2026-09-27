@@ -1,6 +1,8 @@
+use crate::xml::write_text_element;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
 use chrono::{DateTime, FixedOffset};
-use xml_builder::{XMLElement, XMLError};
+use quick_xml::Writer;
+use std::io::{self, Write};
 
 /// Encapsulates information about an individual Sitemap.
 #[derive(Debug, Clone)]
@@ -28,25 +30,24 @@ impl Sitemap {
         }
     }
 
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XMLElement, XMLError> {
-        let mut sitemap: XMLElement = XMLElement::new("sitemap");
+    pub(crate) fn write_xml<W: Write>(&self, writer: &mut Writer<W>) -> io::Result<()> {
+        writer
+            .create_element("sitemap")
+            .write_inner_content(|writer| {
+                // add <loc>
+                write_text_element(writer, "loc", &self.location)?;
 
-        // add <loc>
-        let mut loc: XMLElement = XMLElement::new("loc");
-        loc.add_text(self.location)?;
-        sitemap.add_child(loc)?;
+                // add <lastmod>, if it exists
+                if let Some(last_modified) = self.last_modified {
+                    write_text_element(
+                        writer,
+                        "lastmod",
+                        &last_modified.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
+                    )?;
+                }
 
-        // add <lastmod>, if it exists
-        if let Some(last_modified) = self.last_modified {
-            let mut last_mod: XMLElement = XMLElement::new("lastmod");
-            last_mod
-                .add_text(last_modified.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
-            sitemap.add_child(last_mod)?;
-        }
-
-        Ok(sitemap)
+                Ok(())
+            })?;
+        Ok(())
     }
 }

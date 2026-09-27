@@ -1,6 +1,8 @@
+use crate::xml::write_text_element;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
 use chrono::{DateTime, FixedOffset};
-use xml_builder::{XMLElement, XMLError};
+use quick_xml::Writer;
+use std::io::{self, Write};
 
 /// A sitemap news.
 #[derive(Debug, Clone)]
@@ -36,29 +38,26 @@ impl News {
         }
     }
 
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XMLElement, XMLError> {
-        let mut news: XMLElement = XMLElement::new("news:news");
+    pub(crate) fn write_xml<W: Write>(&self, writer: &mut Writer<W>) -> io::Result<()> {
+        writer
+            .create_element("news:news")
+            .write_inner_content(|writer| {
+                // add <news:publication>
+                self.publication.write_xml(writer)?;
 
-        // add <news:publication>
-        news.add_child(self.publication.to_xml()?)?;
+                // add <news:publication_date>
+                write_text_element(
+                    writer,
+                    "news:publication_date",
+                    &self
+                        .publication_date
+                        .to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
+                )?;
 
-        // add <news:publication_date>
-        let mut publication_date: XMLElement = XMLElement::new("news:publication_date");
-        publication_date.add_text(
-            self.publication_date
-                .to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
-        )?;
-        news.add_child(publication_date)?;
-
-        // add <news:title>
-        let mut title: XMLElement = XMLElement::new("news:title");
-        title.add_text(self.title)?;
-        news.add_child(title)?;
-
-        Ok(news)
+                // add <news:title>
+                write_text_element(writer, "news:title", &self.title)
+            })?;
+        Ok(())
     }
 }
 
@@ -83,22 +82,16 @@ impl Publication {
         Self { name, language }
     }
 
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XMLElement, XMLError> {
-        let mut publication: XMLElement = XMLElement::new("news:publication");
+    pub(crate) fn write_xml<W: Write>(&self, writer: &mut Writer<W>) -> io::Result<()> {
+        writer
+            .create_element("news:publication")
+            .write_inner_content(|writer| {
+                // add <news:name>
+                write_text_element(writer, "news:name", &self.name)?;
 
-        // add <news:name>
-        let mut name: XMLElement = XMLElement::new("news:name");
-        name.add_text(self.name)?;
-        publication.add_child(name)?;
-
-        // add <news:language>
-        let mut language: XMLElement = XMLElement::new("news:language");
-        language.add_text(self.language)?;
-        publication.add_child(language)?;
-
-        Ok(publication)
+                // add <news:language>
+                write_text_element(writer, "news:language", &self.language)
+            })?;
+        Ok(())
     }
 }
