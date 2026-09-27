@@ -58,7 +58,7 @@ sitemap issues before you can fix data problems.
 ## Restrictions
 
 This library **cannot** parse sitemaps of any kind (yet! - pull requests
-welcome! See Feature Requests section below).
+welcome!).
 
 ## Examples
 
@@ -308,13 +308,6 @@ spec - it must be implemented!
 - https://developers.google.com/search/docs/specialty/international/localized-versions#sitemap
   - https://developers.google.com/search/docs/specialty/international/localized-versions#all-method-guidelines
   - https://developers.google.com/search/docs/specialty/international/localized-versions#xdefault
-
-### Feature Requests
-
-These are extremely high priority! Very open to contributions!
-
-- `Read and validate sitemaps`: https://github.com/goddtriffin/sitemap-rs/issues/20
-- `Add strict validations: ISO 3166 Country Code, ISO 639 Part 1 Language Code, ISO 15924 Language Script Variations`: https://github.com/goddtriffin/sitemap-rs/issues/15
 
 ### Commands
 
