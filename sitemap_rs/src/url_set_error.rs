@@ -4,10 +4,10 @@ use std::fmt::{Display, Formatter};
 /// An error when instantiating or generating sitemaps.
 #[derive(Debug)]
 pub enum UrlSetError {
-    /// Returned when a \<urlset\> contains more than `50,000` \<url\>.
+    /// Returned when a `<urlset>` contains more than `50,000` `<url>`.
     TooManyUrls(usize),
 
-    /// Returned when a \<urlset\> contains more than `1,000` \<news\>.
+    /// Returned when a `<urlset>` contains more than `1,000` `<news>`.
     TooMuchNews(usize),
 }
 

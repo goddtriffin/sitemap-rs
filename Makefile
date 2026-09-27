@@ -32,6 +32,7 @@ test: ## runs tests
 	cargo check
 	cargo clippy --all-targets
 	cargo test
+	RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
 
 .PHONY: fix
 fix: ## fixes the codebase

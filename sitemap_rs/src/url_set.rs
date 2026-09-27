@@ -6,19 +6,19 @@ use std::io::{self, Write};
 
 /// Encapsulates the file and references the current protocol standard.
 pub struct UrlSet {
-    /// The namespace for the \<urlset\>.
+    /// The namespace for the `<urlset>`.
     pub xmlns: String,
 
-    /// A namespace extension for allowing \<xhtml:link\> (alternate language links) in the `UrlSet`.
+    /// A namespace extension for allowing `<xhtml:link>` (alternate language links) in the `UrlSet`.
     pub xmlns_xhtml: Option<String>,
 
-    /// A namespace extension for allowing \<image\> in the `UrlSet`.
+    /// A namespace extension for allowing `<image>` in the `UrlSet`.
     pub xmlns_image: Option<String>,
 
-    /// A namespace extension for allowing \<video\> in the `UrlSet`.
+    /// A namespace extension for allowing `<video>` in the `UrlSet`.
     pub xmlns_video: Option<String>,
 
-    /// A namespace extension for allowing \<news\> in the `UrlSet`.
+    /// A namespace extension for allowing `<news>` in the `UrlSet`.
     pub xmlns_news: Option<String>,
 
     /// All the URLs that will become indexed.

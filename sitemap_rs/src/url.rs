@@ -9,10 +9,10 @@ use quick_xml::Writer;
 use std::fmt::{Display, Formatter};
 use std::io::{self, Write};
 
-/// The default `priority` of a sitemap.xml <url>.
+/// The default `priority` of a sitemap.xml `<url>`.
 pub const DEFAULT_PRIORITY: f32 = 0.5;
 
-/// A \<url\> entry within a sitemap.xml.
+/// A `<url>` entry within a sitemap.xml.
 #[derive(Debug, Clone)]
 pub struct Url {
     /// URL of the page.

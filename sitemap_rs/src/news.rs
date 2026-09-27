@@ -19,7 +19,7 @@ pub struct News {
     ///
     /// Tip: Google may shorten the title of the news article for space reasons when displaying the article on Google News.
     /// Include the title of the article as it appears on your site.
-    /// Don't include the author name, publication name, or publication date in the News sitemap <title> tag.
+    /// Don't include the author name, publication name, or publication date in the News sitemap `<title>` tag.
     pub title: String,
 }
 
@@ -57,12 +57,12 @@ impl News {
 /// The publication where the article appears.
 #[derive(Debug, Clone)]
 pub struct Publication {
-    /// The <name> tag is the name of the news publication.
+    /// The `<name>` tag is the name of the news publication.
     ///
     /// It must exactly match the name as it appears on your articles on news.google.com, except for anything in parentheses.
     pub name: String,
 
-    /// The <language> tag is the language of your publication.
+    /// The `<language>` tag is the language of your publication.
     ///
     /// Use an ISO 639 language code (two or three letters).
     /// Exception: For Simplified Chinese, use zh-cn and for Traditional Chinese, use zh-tw.
