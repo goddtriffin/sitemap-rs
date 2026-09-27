@@ -1,4 +1,5 @@
-use chrono::{DateTime, FixedOffset, NaiveDate};
+use jiff::civil::date;
+use jiff::tz::{TimeZone, offset};
 use sitemap_rs::url::Url;
 use sitemap_rs::url_set::UrlSet;
 use sitemap_rs::video::{Platform, PlatformType, Relationship, Restriction, Uploader, Video};
@@ -13,22 +14,20 @@ fn main() {
         String::from("https://www.toddgriffin.me/videoplayer.php?video=123"),
     )
     .duration(600)
-    .expiration_date(DateTime::from_naive_utc_and_offset(
-        NaiveDate::from_ymd_opt(2021, 11, 5)
-            .unwrap()
-            .and_hms_opt(11, 20, 30)
+    .expiration_date(
+        date(2021, 11, 5)
+            .at(19, 20, 30, 0)
+            .to_zoned(TimeZone::fixed(offset(8)))
             .unwrap(),
-        FixedOffset::east_opt(8 * 3600).unwrap(),
-    ))
+    )
     .rating(4.2)
     .view_count(8633)
-    .publication_date(DateTime::from_naive_utc_and_offset(
-        NaiveDate::from_ymd_opt(1998, 1, 15)
-            .unwrap()
-            .and_hms_opt(4, 20, 0)
+    .publication_date(
+        date(1998, 1, 15)
+            .at(12, 20, 0, 0)
+            .to_zoned(TimeZone::fixed(offset(8)))
             .unwrap(),
-        FixedOffset::east_opt(8 * 3600).unwrap(),
-    ))
+    )
     .family_friendly(true)
     .restriction(Restriction::new(
         BTreeSet::from([

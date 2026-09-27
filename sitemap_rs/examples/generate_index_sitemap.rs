@@ -1,4 +1,5 @@
-use chrono::{DateTime, FixedOffset, NaiveDate};
+use jiff::civil::date;
+use jiff::tz::TimeZone;
 use sitemap_rs::sitemap::Sitemap;
 use sitemap_rs::sitemap_index::SitemapIndex;
 
@@ -6,23 +7,21 @@ fn main() {
     let sitemaps: Vec<Sitemap> = vec![
         Sitemap::new(
             String::from("https://www.toddgriffin.me/sitemap1.xml.gz"),
-            Some(DateTime::from_naive_utc_and_offset(
-                NaiveDate::from_ymd_opt(1998, 1, 15)
-                    .unwrap()
-                    .and_hms_opt(4, 20, 0)
+            Some(
+                date(1998, 1, 15)
+                    .at(4, 20, 0, 0)
+                    .to_zoned(TimeZone::UTC)
                     .unwrap(),
-                FixedOffset::east_opt(0).unwrap(),
-            )),
+            ),
         ),
         Sitemap::new(
             String::from("https://www.toddgriffin.me/sitemap2.xml.gz"),
-            Some(DateTime::from_naive_utc_and_offset(
-                NaiveDate::from_ymd_opt(2000, 1, 31)
-                    .unwrap()
-                    .and_hms_opt(4, 20, 0)
+            Some(
+                date(2000, 1, 31)
+                    .at(4, 20, 0, 0)
+                    .to_zoned(TimeZone::UTC)
                     .unwrap(),
-                FixedOffset::east_opt(0).unwrap(),
-            )),
+            ),
         ),
     ];
 

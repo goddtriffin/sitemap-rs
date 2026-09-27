@@ -3,7 +3,8 @@
 //! Only API that is independent of the underlying XML library is used here (builders, `new()`,
 //! `write()`, and `.unwrap()`), so this code compiles unchanged across XML library migrations.
 
-use chrono::{DateTime, FixedOffset, NaiveDate};
+use jiff::tz::TimeZone;
+use jiff::{Zoned, civil};
 use sitemap_rs::image::Image;
 use sitemap_rs::news::{News, Publication};
 use sitemap_rs::sitemap::Sitemap;
@@ -53,14 +54,11 @@ impl Scenario {
     }
 }
 
-fn date(year: i32, month: u32, day: u32) -> DateTime<FixedOffset> {
-    DateTime::from_naive_utc_and_offset(
-        NaiveDate::from_ymd_opt(year, month, day)
-            .unwrap()
-            .and_hms_opt(4, 20, 0)
-            .unwrap(),
-        FixedOffset::east_opt(0).unwrap(),
-    )
+fn date(year: i16, month: i8, day: i8) -> Zoned {
+    civil::date(year, month, day)
+        .at(4, 20, 0, 0)
+        .to_zoned(TimeZone::UTC)
+        .unwrap()
 }
 
 /// The most common sitemap shape: `<loc>`, `<lastmod>`, `<changefreq>`, and `<priority>`.

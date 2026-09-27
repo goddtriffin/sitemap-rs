@@ -1,6 +1,5 @@
-use crate::xml::write_text_element;
-use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
-use chrono::{DateTime, FixedOffset};
+use crate::xml::{format_date, write_text_element};
+use jiff::Zoned;
 use quick_xml::Writer;
 use std::io::{self, Write};
 
@@ -14,7 +13,7 @@ pub struct News {
     ///
     /// Specify the original date and time when the article was published on your site.
     /// Don't specify the time when you added the article to your sitemap.
-    pub publication_date: DateTime<FixedOffset>,
+    pub publication_date: Zoned,
 
     /// The title of the news article.
     ///
@@ -26,11 +25,7 @@ pub struct News {
 
 impl News {
     #[must_use]
-    pub const fn new(
-        publication: Publication,
-        publication_date: DateTime<FixedOffset>,
-        title: String,
-    ) -> Self {
+    pub const fn new(publication: Publication, publication_date: Zoned, title: String) -> Self {
         Self {
             publication,
             publication_date,
@@ -49,9 +44,7 @@ impl News {
                 write_text_element(
                     writer,
                     "news:publication_date",
-                    &self
-                        .publication_date
-                        .to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
+                    &format_date(&self.publication_date),
                 )?;
 
                 // add <news:title>

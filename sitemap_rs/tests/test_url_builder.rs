@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use jiff::Zoned;
 use sitemap_rs::news::{News, Publication};
 use sitemap_rs::url::{ChangeFrequency, DEFAULT_PRIORITY, Url};
 use sitemap_rs::url_builder::UrlBuilder;
@@ -17,7 +17,7 @@ fn test_only_required_fields() {
 fn test_all_normal_fields() {
     let url_builder_result: Result<Url, UrlError> =
         UrlBuilder::new(String::from("https://www.toddgriffin.me/"))
-            .last_modified(DateTime::from(Utc::now()))
+            .last_modified(Zoned::now())
             .change_frequency(ChangeFrequency::Weekly)
             .priority(DEFAULT_PRIORITY)
             .build();
@@ -32,7 +32,7 @@ fn test_all_fields() {
                 "de".to_owned(),
                 "https://www.toddgriffin.me/de".to_owned(),
             )])
-            .last_modified(DateTime::from(Utc::now()))
+            .last_modified(Zoned::now())
             .change_frequency(ChangeFrequency::Weekly)
             .priority(DEFAULT_PRIORITY)
             .images(vec![Image::new(String::from("https://www.toddgriffin.me/static/image/social/profile-picture.webp"))])
@@ -45,7 +45,7 @@ fn test_all_fields() {
             ).build().unwrap()])
             .news(News::new(
                 Publication::new(String::from("The Todd Times"), String::from("en")),
-                DateTime::from(Utc::now()),
+                Zoned::now(),
                 String::from(
                     "Local Software Engineer, Todd, Finally Completes Project He Has Talked About For Years",
                 ),

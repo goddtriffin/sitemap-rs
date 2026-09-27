@@ -3,9 +3,8 @@ use crate::news::News;
 use crate::url_builder::UrlBuilder;
 use crate::url_error::UrlError;
 use crate::video::Video;
-use crate::xml::write_text_element;
-use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
-use chrono::{DateTime, FixedOffset};
+use crate::xml::{format_date, write_text_element};
+use jiff::Zoned;
 use quick_xml::Writer;
 use std::fmt::{Display, Formatter};
 use std::io::{self, Write};
@@ -31,7 +30,7 @@ pub struct Url {
     /// This format allows you to omit the time portion, if desired, and use YYYY-MM-DD.
     /// Note that the date must be set to the date the linked page was last modified, not when the sitemap is generated.
     /// Note also that this tag is separate from the If-Modified-Since (304) header the server can return, and search engines may use the information from both sources differently.
-    pub last_modified: Option<DateTime<FixedOffset>>,
+    pub last_modified: Option<Zoned>,
 
     /// How frequently the page is likely to change.
     ///
@@ -75,7 +74,7 @@ impl Url {
     pub fn new(
         location: String,
         links: Vec<Link>,
-        last_modified: Option<DateTime<FixedOffset>>,
+        last_modified: Option<Zoned>,
         change_frequency: Option<ChangeFrequency>,
         priority: Option<f32>,
         images: Option<Vec<Image>>,
@@ -146,12 +145,8 @@ impl Url {
             }
 
             // add <lastmod>, if it exists
-            if let Some(last_modified) = self.last_modified {
-                write_text_element(
-                    writer,
-                    "lastmod",
-                    &last_modified.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
-                )?;
+            if let Some(last_modified) = &self.last_modified {
+                write_text_element(writer, "lastmod", &format_date(last_modified))?;
             }
 
             // add <changefreq>, if it exists

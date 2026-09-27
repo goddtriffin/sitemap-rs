@@ -1,6 +1,8 @@
 extern crate core;
 
-use chrono::{DateTime, FixedOffset, NaiveDate};
+use jiff::Zoned;
+use jiff::civil::date;
+use jiff::tz::{Offset, TimeZone, offset};
 use sitemap_rs::sitemap::Sitemap;
 use sitemap_rs::sitemap_index::SitemapIndex;
 use sitemap_rs::sitemap_index_error::SitemapIndexError;
@@ -9,13 +11,12 @@ use sitemap_rs::sitemap_index_error::SitemapIndexError;
 fn test_write_all_fields() {
     let sitemaps: Vec<Sitemap> = vec![Sitemap::new(
         String::from("https://www.toddgriffin.me/sitemap.xml.gz"),
-        Some(DateTime::from_naive_utc_and_offset(
-            NaiveDate::from_ymd_opt(1998, 1, 15)
-                .unwrap()
-                .and_hms_opt(4, 20, 0)
+        Some(
+            date(1998, 1, 15)
+                .at(4, 20, 0, 0)
+                .to_zoned(TimeZone::UTC)
                 .unwrap(),
-            FixedOffset::east_opt(0).unwrap(),
-        )),
+        ),
     )];
     let index_sitemap: SitemapIndex = SitemapIndex::new(sitemaps).unwrap();
 
@@ -111,4 +112,72 @@ fn test_write() {
 
     let mut buf = Vec::<u8>::new();
     sitemap_index.write(&mut buf).unwrap();
+}
+
+/// Writes a `SitemapIndex` with a single `<lastmod>` and returns the `<lastmod>` text.
+fn written_last_modified(last_modified: Zoned) -> String {
+    let sitemaps: Vec<Sitemap> = vec![Sitemap::new(
+        String::from("https://www.toddgriffin.me/sitemap.xml"),
+        Some(last_modified),
+    )];
+    let mut buf: Vec<u8> = Vec::<u8>::new();
+    SitemapIndex::new(sitemaps)
+        .unwrap()
+        .write(&mut buf)
+        .unwrap();
+    let xml: String = String::from_utf8(buf).unwrap();
+
+    let start: usize = xml.find("<lastmod>").unwrap() + "<lastmod>".len();
+    let end: usize = xml.find("</lastmod>").unwrap();
+    xml[start..end].to_owned()
+}
+
+#[test]
+fn test_write_date_truncates_fractional_seconds() {
+    let last_modified: Zoned = date(1998, 1, 15)
+        .at(4, 20, 0, 999_999_999)
+        .to_zoned(TimeZone::UTC)
+        .unwrap();
+    assert_eq!(
+        "1998-01-15T04:20:00+00:00",
+        written_last_modified(last_modified)
+    );
+}
+
+#[test]
+fn test_write_date_negative_offset() {
+    let last_modified: Zoned = date(1998, 1, 15)
+        .at(4, 20, 0, 0)
+        .to_zoned(TimeZone::fixed(offset(-5)))
+        .unwrap();
+    assert_eq!(
+        "1998-01-15T04:20:00-05:00",
+        written_last_modified(last_modified)
+    );
+}
+
+#[test]
+fn test_write_date_non_hour_offset() {
+    let last_modified: Zoned = date(1998, 1, 15)
+        .at(4, 20, 0, 0)
+        .to_zoned(TimeZone::fixed(
+            Offset::from_seconds(5 * 3600 + 30 * 60).unwrap(),
+        ))
+        .unwrap();
+    assert_eq!(
+        "1998-01-15T04:20:00+05:30",
+        written_last_modified(last_modified)
+    );
+}
+
+#[test]
+fn test_write_date_iana_time_zone() {
+    let last_modified: Zoned = date(2024, 7, 4)
+        .at(12, 0, 0, 0)
+        .in_tz("America/New_York")
+        .unwrap();
+    assert_eq!(
+        "2024-07-04T12:00:00-04:00",
+        written_last_modified(last_modified)
+    );
 }

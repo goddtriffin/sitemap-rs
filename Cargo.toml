@@ -3,7 +3,7 @@ members = ["sitemap_rs"]
 resolver = "3"
 
 [workspace.package]
-version = "0.6.0"
+version = "0.7.0"
 edition = "2024"
 rust-version = "1.89"
 authors = ["Todd Everett Griffin <tgriffin115@gmail.com>"]
@@ -40,7 +40,7 @@ cargo = { level = "deny", priority = -1 }
 
 [workspace.dependencies]
 quick-xml = "0.42.0"
-chrono = "0.4.41"
+jiff = { version = "0.2.37", default-features = false }
 
 # benchmarks
 criterion = "0.8.2"

@@ -1,8 +1,7 @@
 use crate::video_builder::VideoBuilder;
 use crate::video_error::VideoError;
-use crate::xml::write_text_element;
-use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
-use chrono::{DateTime, FixedOffset};
+use crate::xml::{format_date, write_text_element};
+use jiff::Zoned;
 use quick_xml::Writer;
 use quick_xml::events::BytesText;
 use std::collections::BTreeSet;
@@ -58,7 +57,7 @@ pub struct Video {
     /// Omit this tag if your video does not expire.
     /// If present, Google Search won't show your video after this date.
     /// For recurring videos at the same URL, update the expiration date to the new expiration date.
-    pub expiration_date: Option<DateTime<FixedOffset>>,
+    pub expiration_date: Option<Zoned>,
 
     /// The rating of the video.
     ///
@@ -69,7 +68,7 @@ pub struct Video {
     pub view_count: Option<usize>,
 
     /// The date the video was first published, in W3C format.
-    pub publication_date: Option<DateTime<FixedOffset>>,
+    pub publication_date: Option<Zoned>,
 
     /// Whether the video is available with `SafeSearch`.
     ///
@@ -132,10 +131,10 @@ impl Video {
         content_location: String,
         player_location: String,
         duration: Option<u16>,
-        expiration_date: Option<DateTime<FixedOffset>>,
+        expiration_date: Option<Zoned>,
         rating: Option<f32>,
         view_count: Option<usize>,
-        publication_date: Option<DateTime<FixedOffset>>,
+        publication_date: Option<Zoned>,
         family_friendly: Option<bool>,
         restriction: Option<Restriction>,
         platform: Option<Platform>,
@@ -249,12 +248,8 @@ impl Video {
                 }
 
                 // add <video:expiration_date>, if it exists
-                if let Some(exp_date) = self.expiration_date {
-                    write_text_element(
-                        writer,
-                        "video:expiration_date",
-                        &exp_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
-                    )?;
+                if let Some(exp_date) = &self.expiration_date {
+                    write_text_element(writer, "video:expiration_date", &format_date(exp_date))?;
                 }
 
                 // add <video:rating>, if it exists
@@ -268,12 +263,8 @@ impl Video {
                 }
 
                 // add <video:publication_date>, if it exists
-                if let Some(pub_date) = self.publication_date {
-                    write_text_element(
-                        writer,
-                        "video:publication_date",
-                        &pub_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
-                    )?;
+                if let Some(pub_date) = &self.publication_date {
+                    write_text_element(writer, "video:publication_date", &format_date(pub_date))?;
                 }
 
                 // add <video:family_friendly>, if it exists

@@ -340,16 +340,16 @@ any change there is real.
 
 #### Results
 
-Using `quick-xml` v0.42.0, median of 5 runs.
+Using `quick-xml` v0.42.0 and `jiff` v0.2.37, median of 5 runs.
 
 Hardware: MacBook Pro (Mac15,9), Apple M3 Max (12 performance + 4 efficiency
 cores), 64 GB RAM, macOS 26.6.2, on AC power. Rust 1.98.1.
 
 | Scenario            | Output size | Time    | Throughput | Allocations | Peak heap |
 |---------------------|-------------|---------|------------|-------------|-----------|
-| `url_set/plain_50k` | 8.1 MiB     | 11.7 ms | 698 MiB/s  | 100,029     | 9.0 MiB   |
-| `url_set/rich_1k`   | 1.9 MiB     | 2.7 ms  | 722 MiB/s  | 37,029      | 2.5 MiB   |
-| `sitemap_index/50k` | 6.5 MiB     | 7.1 ms  | 925 MiB/s  | 50,028      | 9.0 MiB   |
+| `url_set/plain_50k` | 8.1 MiB     | 11.4 ms | 712 MiB/s  | 100,029     | 9.0 MiB   |
+| `url_set/rich_1k`   | 1.9 MiB     | 2.7 ms  | 728 MiB/s  | 37,029      | 2.5 MiB   |
+| `sitemap_index/50k` | 6.5 MiB     | 6.9 ms  | 940 MiB/s  | 50,028      | 9.0 MiB   |
 
 - `url_set/plain_50k`: 50,000 URLs with `<loc>`, `<lastmod>`, `<changefreq>`,
   and `<priority>` (the largest allowed sitemap).

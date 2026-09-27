@@ -3,7 +3,7 @@ use crate::news::News;
 use crate::url::{ChangeFrequency, Link, Url};
 use crate::url_error::UrlError;
 use crate::video::Video;
-use chrono::{DateTime, FixedOffset};
+use jiff::Zoned;
 
 /// A \<url\> entry within a sitemap.xml.
 ///
@@ -25,7 +25,7 @@ pub struct UrlBuilder {
     /// This format allows you to omit the time portion, if desired, and use YYYY-MM-DD.
     /// Note that the date must be set to the date the linked page was last modified, not when the sitemap is generated.
     /// Note also that this tag is separate from the If-Modified-Since (304) header the server can return, and search engines may use the information from both sources differently.
-    pub last_modified: Option<DateTime<FixedOffset>>,
+    pub last_modified: Option<Zoned>,
 
     /// How frequently the page is likely to change.
     ///
@@ -78,7 +78,7 @@ impl UrlBuilder {
         self
     }
 
-    pub fn last_modified(&mut self, last_modified: DateTime<FixedOffset>) -> &mut Self {
+    pub fn last_modified(&mut self, last_modified: Zoned) -> &mut Self {
         self.last_modified = Some(last_modified);
         self
     }
@@ -117,7 +117,7 @@ impl UrlBuilder {
         Url::new(
             self.location.clone(),
             self.links.clone(),
-            self.last_modified,
+            self.last_modified.clone(),
             self.change_frequency,
             self.priority,
             self.images.clone(),

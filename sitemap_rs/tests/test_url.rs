@@ -1,6 +1,6 @@
 extern crate core;
 
-use chrono::{DateTime, Utc};
+use jiff::Zoned;
 use sitemap_rs::image::Image;
 use sitemap_rs::url::{ChangeFrequency, DEFAULT_PRIORITY, Link, Url};
 use sitemap_rs::url_error::UrlError;
@@ -28,7 +28,7 @@ fn test_constructor_all_normal_fields() {
             "de".to_owned(),
             "https://www.toddgriffin.me/de".to_owned(),
         )],
-        Some(DateTime::from(Utc::now())),
+        Some(Zoned::now()),
         Some(ChangeFrequency::Weekly),
         Some(DEFAULT_PRIORITY),
         None,
