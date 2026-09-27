@@ -10,10 +10,10 @@ use std::io::{self, Write};
 
 /// A sitemap video.
 ///
-/// It's required to provide either a <video:content_loc> or <video:player_loc> tag.
-/// We recommend that your provide the <video:content_loc> tag, if possible.
+/// It's required to provide either a `<video:content_loc>` or `<video:player_loc>` tag.
+/// We recommend that your provide the `<video:content_loc>` tag, if possible.
 /// This is the most effective way for Google to fetch your video content files.
-/// If <video:content_loc> isn't available, provide <video:player_loc> as an alternative.
+/// If `<video:content_loc>` isn't available, provide `<video:player_loc>` as an alternative.
 #[derive(Debug, Clone)]
 pub struct Video {
     /// A URL pointing to the video thumbnail image file.
@@ -34,15 +34,15 @@ pub struct Video {
     ///
     /// The file must be one of the supported formats.
     /// - HTML and Flash aren't supported formats.
-    /// - Must not be the same as the <loc> URL.
+    /// - Must not be the same as the `<loc>` URL.
     /// - This is the equivalent of VideoObject.contentUrl in structured data.
     /// - Best practice: If you want to restrict access to your content but still have it crawled, ensure that Googlebot can access your content by using a reverse DNS lookup.
     pub content_location: String,
 
     /// A URL pointing to a player for a specific video.
     ///
-    /// Usually this is the information in the src element of an <embed> tag.
-    /// - Must not be the same as the <loc> URL.
+    /// Usually this is the information in the src element of an `<embed>` tag.
+    /// - Must not be the same as the `<loc>` URL.
     /// - For `YouTube` videos, this value is used rather than `video:content_loc`. This is the equivalent of VideoObject.embedUrl in structured data.
     /// - Best practice: If you want to restrict access to your content but still have it crawled, ensure that Googlebot can access your content by using a reverse DNS lookup.
     pub player_location: String,
@@ -78,8 +78,8 @@ pub struct Video {
     /// Whether to show or hide your video in search results from specific countries.
     ///
     /// Specify a space-delimited list of country codes in ISO 3166 format.
-    /// Only one <video:restriction> tag can be used for each video.
-    /// If there is no <video:restriction> tag, Google assumes that the video can be shown in all locations.
+    /// Only one `<video:restriction>` tag can be used for each video.
+    /// If there is no `<video:restriction>` tag, Google assumes that the video can be shown in all locations.
     /// Note that this tag only affects search results; it doesn't prevent a user from finding or playing your video in a restricted location though other means.
     pub restriction: Option<Restriction>,
 
@@ -87,8 +87,8 @@ pub struct Video {
     ///
     /// This is a list of space-delimited platform types.
     /// Note that this only affects search results on the specified device types; it does not prevent a user from playing your video on a restricted platform.
-    /// Only one <video:platform> tag can appear for each video.
-    /// If there is no <video:platform> tag, Google assumes that the video can be played on all platforms.
+    /// Only one `<video:platform>` tag can appear for each video.
+    /// If there is no `<video:platform>` tag, Google assumes that the video can be played on all platforms.
     pub platform: Option<Platform>,
 
     /// Indicates whether a subscription is required to view the video.
@@ -96,7 +96,7 @@ pub struct Video {
 
     /// The video uploader's name.
     ///
-    /// Only one <video:uploader> is allowed per video.
+    /// Only one `<video:uploader>` is allowed per video.
     /// The string value can be a maximum of 255 characters.
     pub uploader: Option<Uploader>,
 
@@ -108,7 +108,7 @@ pub struct Video {
     /// Tags are generally very short descriptions of key concepts associated with a video or piece of content.
     /// A single video could have several tags, although it might belong to only one category.
     /// For example, a video about grilling food may belong in the "grilling" category, but could be tagged "steak", "meat", "summer", and "outdoor".
-    /// Create a new <video:tag> element for each tag associated with a video.
+    /// Create a new `<video:tag>` element for each tag associated with a video.
     /// A maximum of 32 tags is permitted.
     pub tags: Option<Vec<String>>,
 }
@@ -449,14 +449,14 @@ impl Display for PlatformType {
 
 /// The video uploader's name.
 ///
-/// Only one <video:uploader> is allowed per video.
+/// Only one `<video:uploader>` is allowed per video.
 #[derive(Debug, Clone)]
 pub struct Uploader {
     /// The string value can be a maximum of 255 characters.
     pub name: String,
 
     /// Specifies the URL of a webpage with additional information about this uploader.
-    /// This URL must be in the same domain as the <loc> tag.
+    /// This URL must be in the same domain as the `<loc>` tag.
     pub info: Option<String>,
 }
 

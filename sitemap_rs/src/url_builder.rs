@@ -5,7 +5,7 @@ use crate::url_error::UrlError;
 use crate::video::Video;
 use jiff::Zoned;
 
-/// A \<url\> entry within a sitemap.xml.
+/// A `<url>` entry within a sitemap.xml.
 ///
 /// This is a Builder for Url.
 #[derive(Debug, Clone)]

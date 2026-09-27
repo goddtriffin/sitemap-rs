@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter};
 /// An error when instantiating or generating sitemap index files.
 #[derive(Debug)]
 pub enum SitemapIndexError {
-    /// Returned when a \<sitemapindex\> contains more than `50,000` \<sitemap\>.
+    /// Returned when a `<sitemapindex>` contains more than `50,000` `<sitemap>`.
     TooManySitemaps(usize),
 }
 

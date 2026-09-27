@@ -6,7 +6,7 @@ use std::io::{self, Write};
 
 /// Encapsulates information about all the Sitemaps in the file.
 pub struct SitemapIndex {
-    /// The namespace for the \<sitemapindex\>.
+    /// The namespace for the `<sitemapindex>`.
     pub xmlns: String,
 
     /// All the sitemaps that will become indexed.
