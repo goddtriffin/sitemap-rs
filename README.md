@@ -313,7 +313,7 @@ spec - it must be implemented!
 
 These are extremely high priority! Very open to contributions!
 
-- `Read and validate sitemaps`: https://github.com/goddtriffin/sitemap-rs/issues/14
+- `Read and validate sitemaps`: https://github.com/goddtriffin/sitemap-rs/issues/20
 - `Add strict validations: ISO 3166 Country Code, ISO 639 Part 1 Language Code, ISO 15924 Language Script Variations`: https://github.com/goddtriffin/sitemap-rs/issues/15
 
 ### Commands
