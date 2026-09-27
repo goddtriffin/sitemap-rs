@@ -1,10 +1,13 @@
 use crate::video_builder::VideoBuilder;
 use crate::video_error::VideoError;
+use crate::xml::write_text_element;
 use crate::{RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z};
 use chrono::{DateTime, FixedOffset};
+use quick_xml::Writer;
+use quick_xml::events::BytesText;
 use std::collections::BTreeSet;
 use std::fmt::{Display, Formatter};
-use xml_builder::{XMLElement, XMLError};
+use std::io::{self, Write};
 
 /// A sitemap video.
 ///
@@ -19,14 +22,12 @@ pub struct Video {
 
     /// The title of the video.
     ///
-    /// All HTML entities must be escaped or wrapped in a CDATA block.
     /// We recommend that this match the video title displayed on the web page.
     pub title: String,
 
     /// A description of the video.
     ///
     /// Maximum 2048 characters.
-    /// All HTML entities must be escaped or wrapped in a CDATA block.
     /// It must match the description displayed on the web page (it doesn't need to be a word-for-word match).
     pub description: String,
 
@@ -223,125 +224,108 @@ impl Video {
         )
     }
 
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XMLElement, XMLError> {
-        let mut video: XMLElement = XMLElement::new("video:video");
+    pub(crate) fn write_xml<W: Write>(&self, writer: &mut Writer<W>) -> io::Result<()> {
+        writer
+            .create_element("video:video")
+            .write_inner_content(|writer| {
+                // add <video:thumbnail_loc>
+                write_text_element(writer, "video:thumbnail_loc", &self.thumbnail_location)?;
 
-        // add <video:thumbnail_loc>
-        let mut thumbnail_loc: XMLElement = XMLElement::new("video:thumbnail_loc");
-        thumbnail_loc.add_text(self.thumbnail_location)?;
-        video.add_child(thumbnail_loc)?;
+                // add <video:title>
+                write_text_element(writer, "video:title", &self.title)?;
 
-        // add <video:title>
-        let mut title: XMLElement = XMLElement::new("video:title");
-        title.add_text(self.title)?;
-        video.add_child(title)?;
+                // add <video:description>
+                write_text_element(writer, "video:description", &self.description)?;
 
-        // add <video:description>
-        let mut description: XMLElement = XMLElement::new("video:description");
-        description.add_text(self.description)?;
-        video.add_child(description)?;
+                // add <video:content_loc>
+                write_text_element(writer, "video:content_loc", &self.content_location)?;
 
-        // add <video:content_loc>
-        let mut content_loc: XMLElement = XMLElement::new("video:content_loc");
-        content_loc.add_text(self.content_location)?;
-        video.add_child(content_loc)?;
+                // add <video:player_loc>
+                write_text_element(writer, "video:player_loc", &self.player_location)?;
 
-        // add <video:player_loc>
-        let mut player_loc: XMLElement = XMLElement::new("video:player_loc");
-        player_loc.add_text(self.player_location)?;
-        video.add_child(player_loc)?;
+                // add <video:duration>, if it exists
+                if let Some(d) = self.duration {
+                    write_text_element(writer, "video:duration", &d.to_string())?;
+                }
 
-        // add <video:duration>, if it exists
-        if let Some(d) = self.duration {
-            let mut duration: XMLElement = XMLElement::new("video:duration");
-            duration.add_text(d.to_string())?;
-            video.add_child(duration)?;
-        }
+                // add <video:expiration_date>, if it exists
+                if let Some(exp_date) = self.expiration_date {
+                    write_text_element(
+                        writer,
+                        "video:expiration_date",
+                        &exp_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
+                    )?;
+                }
 
-        // add <video:expiration_date>, if it exists
-        if let Some(exp_date) = self.expiration_date {
-            let mut expiration_date: XMLElement = XMLElement::new("video:expiration_date");
-            expiration_date
-                .add_text(exp_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
-            video.add_child(expiration_date)?;
-        }
+                // add <video:rating>, if it exists
+                if let Some(r) = self.rating {
+                    write_text_element(writer, "video:rating", &r.to_string())?;
+                }
 
-        // add <video:rating>, if it exists
-        if let Some(r) = self.rating {
-            let mut rating: XMLElement = XMLElement::new("video:rating");
-            rating.add_text(r.to_string())?;
-            video.add_child(rating)?;
-        }
+                // add <video:view_count>, if it exists
+                if let Some(vc) = self.view_count {
+                    write_text_element(writer, "video:view_count", &vc.to_string())?;
+                }
 
-        // add <video:view_count>, if it exists
-        if let Some(vc) = self.view_count {
-            let mut view_count: XMLElement = XMLElement::new("video:view_count");
-            view_count.add_text(vc.to_string())?;
-            video.add_child(view_count)?;
-        }
+                // add <video:publication_date>, if it exists
+                if let Some(pub_date) = self.publication_date {
+                    write_text_element(
+                        writer,
+                        "video:publication_date",
+                        &pub_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z),
+                    )?;
+                }
 
-        // add <video:publication_date>, if it exists
-        if let Some(pub_date) = self.publication_date {
-            let mut publication_date: XMLElement = XMLElement::new("video:publication_date");
-            publication_date
-                .add_text(pub_date.to_rfc3339_opts(RFC_3339_SECONDS_FORMAT, RFC_3339_USE_Z))?;
-            video.add_child(publication_date)?;
-        }
+                // add <video:family_friendly>, if it exists
+                if let Some(ff) = self.family_friendly {
+                    write_text_element(writer, "video:family_friendly", yes_no(ff))?;
+                }
 
-        // add <video:family_friendly>, if it exists
-        if let Some(ff) = self.family_friendly {
-            let ff: &str = if ff { "yes" } else { "no" };
-            let mut family_friendly: XMLElement = XMLElement::new("video:family_friendly");
-            family_friendly.add_text(ff.to_string())?;
-            video.add_child(family_friendly)?;
-        }
+                // add <video:restriction>, if it exists
+                if let Some(restriction) = &self.restriction {
+                    restriction.write_xml(writer)?;
+                }
 
-        // add <video:restriction>, if it exists
-        if let Some(restriction) = self.restriction {
-            video.add_child(restriction.to_xml()?)?;
-        }
+                // add <video:platform>, if it exists
+                if let Some(platform) = &self.platform {
+                    platform.write_xml(writer)?;
+                }
 
-        // add <video:platform>, if it exists
-        if let Some(platform) = self.platform {
-            video.add_child(platform.to_xml()?)?;
-        }
+                // add <video:requires_subscription>, if it exists
+                if let Some(requires_sub) = self.requires_subscription {
+                    write_text_element(
+                        writer,
+                        "video:requires_subscription",
+                        yes_no(requires_sub),
+                    )?;
+                }
 
-        // add <video:requires_subscription>, if it exists
-        if let Some(requires_sub) = self.requires_subscription {
-            let requires_sub: &str = if requires_sub { "yes" } else { "no" };
-            let mut requires_subscription: XMLElement =
-                XMLElement::new("video:requires_subscription");
-            requires_subscription.add_text(requires_sub.to_string())?;
-            video.add_child(requires_subscription)?;
-        }
+                // add <video:uploader>, if it exists
+                if let Some(uploader) = &self.uploader {
+                    uploader.write_xml(writer)?;
+                }
 
-        // add <video:uploader>, if it exists
-        if let Some(uploader) = self.uploader {
-            video.add_child(uploader.to_xml()?)?;
-        }
+                // add <video:live>, if it exists
+                if let Some(l) = self.live {
+                    write_text_element(writer, "video:live", yes_no(l))?;
+                }
 
-        // add <video:live>, if it exists
-        if let Some(l) = self.live {
-            let l: &str = if l { "yes" } else { "no" };
-            let mut live: XMLElement = XMLElement::new("video:live");
-            live.add_text(l.to_string())?;
-            video.add_child(live)?;
-        }
+                // add <video:tag>, if it exists
+                if let Some(tags) = &self.tags {
+                    for t in tags {
+                        write_text_element(writer, "video:tag", t)?;
+                    }
+                }
 
-        // add <video:tag>, if it exists
-        if let Some(tags) = self.tags {
-            for t in tags {
-                let mut tag: XMLElement = XMLElement::new("video:tag");
-                tag.add_text(t)?;
-                video.add_child(tag)?;
-            }
-        }
-
-        Ok(video)
+                Ok(())
+            })?;
+        Ok(())
     }
+}
+
+/// The value of a yes/no video tag.
+const fn yes_no(value: bool) -> &'static str {
+    if value { "yes" } else { "no" }
 }
 
 /// Whether to show or hide your video in search results from specific countries.
@@ -367,20 +351,20 @@ impl Restriction {
         }
     }
 
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XMLElement, XMLError> {
-        let mut restriction: XMLElement = XMLElement::new("video:restriction");
-
-        // set relationship attribute
-        restriction.add_attribute("relationship", self.relationship.as_str());
-
+    pub(crate) fn write_xml<W: Write>(&self, writer: &mut Writer<W>) -> io::Result<()> {
         // set text as space-delimited country codes in ISO 3166 format
-        let country_codes: String = self.country_codes.into_iter().collect::<Vec<_>>().join(" ");
-        restriction.add_text(country_codes)?;
+        let country_codes: String = self
+            .country_codes
+            .iter()
+            .map(String::as_str)
+            .collect::<Vec<&str>>()
+            .join(" ");
 
-        Ok(restriction)
+        writer
+            .create_element("video:restriction")
+            .with_attribute(("relationship", self.relationship.as_str()))
+            .write_text_content(BytesText::new(&country_codes))?;
+        Ok(())
     }
 }
 
@@ -428,25 +412,20 @@ impl Platform {
         }
     }
 
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XMLElement, XMLError> {
-        let mut platform: XMLElement = XMLElement::new("video:platform");
-
-        // set relationship attribute
-        platform.add_attribute("relationship", self.relationship.as_str());
-
+    pub(crate) fn write_xml<W: Write>(&self, writer: &mut Writer<W>) -> io::Result<()> {
         // set text as space-delimited platform types
         let platform_types: String = self
             .platforms
             .iter()
-            .map(std::string::ToString::to_string)
-            .collect::<Vec<String>>()
+            .map(PlatformType::as_str)
+            .collect::<Vec<&str>>()
             .join(" ");
-        platform.add_text(platform_types)?;
 
-        Ok(platform)
+        writer
+            .create_element("video:platform")
+            .with_attribute(("relationship", self.relationship.as_str()))
+            .write_text_content(BytesText::new(&platform_types))?;
+        Ok(())
     }
 }
 
@@ -496,20 +475,16 @@ impl Uploader {
         Self { name, info }
     }
 
-    /// # Errors
-    ///
-    /// Will return `XMLError` if there is a problem creating XML elements.
-    pub fn to_xml(self) -> Result<XMLElement, XMLError> {
-        let mut uploader: XMLElement = XMLElement::new("video:uploader");
+    pub(crate) fn write_xml<W: Write>(&self, writer: &mut Writer<W>) -> io::Result<()> {
+        let mut uploader = writer.create_element("video:uploader");
 
         // set info attribute, if it exists
-        if let Some(info) = self.info {
-            uploader.add_attribute("info", info.as_str());
+        if let Some(info) = &self.info {
+            uploader = uploader.with_attribute(("info", info.as_str()));
         }
 
         // set uploader name as text
-        uploader.add_text(self.name)?;
-
-        Ok(uploader)
+        uploader.write_text_content(BytesText::new(&self.name))?;
+        Ok(())
     }
 }

@@ -17,14 +17,12 @@ pub struct VideoBuilder {
 
     /// The title of the video.
     ///
-    /// All HTML entities must be escaped or wrapped in a CDATA block.
     /// We recommend that this match the video title displayed on the web page.
     pub title: String,
 
     /// A description of the video.
     ///
     /// Maximum 2048 characters.
-    /// All HTML entities must be escaped or wrapped in a CDATA block.
     /// It must match the description displayed on the web page (it doesn't need to be a word-for-word match).
     pub description: String,
 

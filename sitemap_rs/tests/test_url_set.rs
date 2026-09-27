@@ -164,6 +164,102 @@ fn test_write_all_fields() {
 }
 
 #[test]
+fn test_write_escapes_special_characters() {
+    let videos: Vec<Video> = vec![
+        Video::builder(
+            String::from("https://www.toddgriffin.me/thumbs/123.jpg?w=1&h=2"),
+            String::from("Steaks & \"Ribs\" <live>"),
+            String::from("Alkis's guide"),
+            String::from("https://www.toddgriffin.me/video123.mp4"),
+            String::from("https://www.toddgriffin.me/videoplayer.php?video=123&autoplay=1"),
+        )
+        .uploader(Uploader::new(
+            String::from("Grilly & Co"),
+            Some(String::from(
+                "https://www.toddgriffin.me/users?name=grilly&id=1",
+            )),
+        ))
+        .tags(vec![String::from("<steak>")])
+        .build()
+        .unwrap(),
+    ];
+    let news: News = News::new(
+        Publication::new(String::from("Times & Co"), String::from("en")),
+        DateTime::from_naive_utc_and_offset(
+            NaiveDate::from_ymd_opt(1998, 1, 15)
+                .unwrap()
+                .and_hms_opt(4, 20, 0)
+                .unwrap(),
+            FixedOffset::east_opt(0).unwrap(),
+        ),
+        String::from("A & B <merge>"),
+    );
+    let urls: Vec<Url> = vec![
+        Url::builder(String::from("https://www.toddgriffin.me/?a=1&b=2"))
+            .links(vec![Link::new(
+                "de".to_owned(),
+                "https://www.toddgriffin.me/?lang=de&a=1".to_owned(),
+            )])
+            .images(vec![Image::new(String::from(
+                "https://www.toddgriffin.me/picture.webp?w=1&h=2",
+            ))])
+            .videos(videos)
+            .news(news)
+            .build()
+            .unwrap(),
+    ];
+    let url_set: UrlSet = UrlSet::new(urls).unwrap();
+
+    let mut buf: Vec<u8> = Vec::<u8>::new();
+    url_set.write(&mut buf).unwrap();
+    let actual: String = String::from_utf8(buf).unwrap();
+
+    let expected: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+	<url>
+		<loc>https://www.toddgriffin.me/?a=1&amp;b=2</loc>
+		<xhtml:link rel="alternate" hreflang="de" href="https://www.toddgriffin.me/?lang=de&amp;a=1" />
+		<image:image>
+			<image:loc>https://www.toddgriffin.me/picture.webp?w=1&amp;h=2</image:loc>
+		</image:image>
+		<video:video>
+			<video:thumbnail_loc>https://www.toddgriffin.me/thumbs/123.jpg?w=1&amp;h=2</video:thumbnail_loc>
+			<video:title>Steaks &amp; &quot;Ribs&quot; &lt;live&gt;</video:title>
+			<video:description>Alkis&apos;s guide</video:description>
+			<video:content_loc>https://www.toddgriffin.me/video123.mp4</video:content_loc>
+			<video:player_loc>https://www.toddgriffin.me/videoplayer.php?video=123&amp;autoplay=1</video:player_loc>
+			<video:uploader info="https://www.toddgriffin.me/users?name=grilly&amp;id=1">Grilly &amp; Co</video:uploader>
+			<video:tag>&lt;steak&gt;</video:tag>
+		</video:video>
+		<news:news>
+			<news:publication>
+				<news:name>Times &amp; Co</news:name>
+				<news:language>en</news:language>
+			</news:publication>
+			<news:publication_date>1998-01-15T04:20:00+00:00</news:publication_date>
+			<news:title>A &amp; B &lt;merge&gt;</news:title>
+		</news:news>
+	</url>
+</urlset>
+"#;
+    assert_eq!(expected, actual);
+}
+
+#[test]
+fn test_write_empty() {
+    let url_set: UrlSet = UrlSet::new(vec![]).unwrap();
+
+    let mut buf: Vec<u8> = Vec::<u8>::new();
+    url_set.write(&mut buf).unwrap();
+    let actual: String = String::from_utf8(buf).unwrap();
+
+    let expected: &str = r#"<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" />
+"#;
+    assert_eq!(expected, actual);
+}
+
+#[test]
 fn test_constructor_only_required_fields() {
     let urls: Vec<Url> = vec![
         Url::builder(String::from("https://www.toddgriffin.me/"))

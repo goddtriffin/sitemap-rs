@@ -15,6 +15,9 @@ A Rust library to generate URL, Index, Image, Video, and News sitemaps.
 - [Video sitemaps](https://developers.google.com/search/docs/advanced/sitemaps/video-sitemaps)
 - [News sitemaps](https://developers.google.com/search/docs/advanced/sitemaps/news-sitemap)
 
+All text and attribute values are XML-escaped for you (e.g. `&` becomes `&amp;`),
+so pass plain, unescaped strings.
+
 ### Validates sitemap data
 
 There are a bunch of restrictions as to what data your sitemaps can hold. This
@@ -55,7 +58,7 @@ sitemap issues before you can fix data problems.
 ## Restrictions
 
 This library **cannot** parse sitemaps of any kind (yet! - pull requests
-welcome! See Feature Requests section below).
+welcome!).
 
 ## Examples
 
@@ -203,8 +206,6 @@ _This pro/con list is accurate as of the most recent update to this document._
 - Supports URL sitemaps
 - Supports writing files
 - Support builder pattern
-- uses [quick-xml](https://github.com/tafia/quick-xml), so it should be quite
-  fast
 - Some struct/method documentation
 
 #### Cons:
@@ -308,13 +309,6 @@ spec - it must be implemented!
   - https://developers.google.com/search/docs/specialty/international/localized-versions#all-method-guidelines
   - https://developers.google.com/search/docs/specialty/international/localized-versions#xdefault
 
-### Feature Requests
-
-These are extremely high priority! Very open to contributions!
-
-- `Replace xml-builder dependency with quick-xml (faster + enable reading sitemaps)`: https://github.com/goddtriffin/sitemap-rs/issues/14
-- `Add strict validations: ISO 3166 Country Code, ISO 639 Part 1 Language Code, ISO 15924 Language Script Variations`: https://github.com/goddtriffin/sitemap-rs/issues/15
-
 ### Commands
 
 - `make lint`
@@ -346,16 +340,16 @@ any change there is real.
 
 #### Results
 
-Using `xml-builder` v0.6.0, median of 5 runs.
+Using `quick-xml` v0.42.0, median of 5 runs.
 
 Hardware: MacBook Pro (Mac15,9), Apple M3 Max (12 performance + 4 efficiency
 cores), 64 GB RAM, macOS 26.6.2, on AC power. Rust 1.98.1.
 
 | Scenario            | Output size | Time    | Throughput | Allocations | Peak heap |
 |---------------------|-------------|---------|------------|-------------|-----------|
-| `url_set/plain_50k` | 8.1 MiB     | 32.3 ms | 252 MiB/s  | 750,055     | 41.3 MiB  |
-| `url_set/rich_1k`   | 1.9 MiB     | 8.3 ms  | 233 MiB/s  | 222,091     | 9.2 MiB   |
-| `sitemap_index/50k` | 6.5 MiB     | 21.0 ms | 311 MiB/s  | 450,054     | 32.4 MiB  |
+| `url_set/plain_50k` | 8.1 MiB     | 11.7 ms | 698 MiB/s  | 100,029     | 9.0 MiB   |
+| `url_set/rich_1k`   | 1.9 MiB     | 2.7 ms  | 722 MiB/s  | 37,029      | 2.5 MiB   |
+| `sitemap_index/50k` | 6.5 MiB     | 7.1 ms  | 925 MiB/s  | 50,028      | 9.0 MiB   |
 
 - `url_set/plain_50k`: 50,000 URLs with `<loc>`, `<lastmod>`, `<changefreq>`,
   and `<priority>` (the largest allowed sitemap).
