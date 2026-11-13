@@ -1,5 +1,3 @@
-extern crate core;
-
 use jiff::Zoned;
 use jiff::civil::date;
 use jiff::tz::{Offset, TimeZone, offset};

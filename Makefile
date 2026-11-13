@@ -30,14 +30,14 @@ lint: ## lints the codebase
 test: ## runs tests
 	cargo fmt --check
 	cargo check
-	cargo clippy --all-targets
+	cargo clippy --workspace --all-targets --all-features -- -D warnings
 	cargo test
 	RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
 
 .PHONY: fix
 fix: ## fixes the codebase
 	cargo fix --allow-dirty --allow-staged
-	cargo clippy --fix --allow-dirty --allow-staged
+	cargo clippy --workspace --all-targets --all-features --fix --allow-dirty --allow-staged
 
 .PHONY: bench
 bench: ## runs benchmarks (timing and allocations)

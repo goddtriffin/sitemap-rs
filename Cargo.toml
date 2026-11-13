@@ -3,9 +3,9 @@ members = ["sitemap_rs"]
 resolver = "3"
 
 [workspace.package]
-version = "0.7.0"
+version = "0.7.1"
 edition = "2024"
-rust-version = "1.89"
+rust-version = "1.100"
 authors = ["Todd Everett Griffin <tgriffin115@gmail.com>"]
 readme = "README.md"
 repository = "https://github.com/goddtriffin/sitemap-rs"
@@ -25,10 +25,9 @@ include = ["**/*.rs", "Cargo.toml", ".clippy.toml", "LICENSE", "README.md"]
 [workspace.lints.rust]
 unsafe_code = { level = "forbid", priority = 0 }
 unfulfilled_lint_expectations = { level = "forbid", priority = 1 }
+unused = { level = "deny", priority = -1 }
 
 [workspace.lints.clippy]
-allow_attributes = { level = "forbid", priority = 1 }
-nursery = { level = "allow", priority = 0 }
 all = { level = "deny", priority = -1 }
 correctness = { level = "deny", priority = -1 }
 suspicious = { level = "deny", priority = -1 }
@@ -37,10 +36,20 @@ complexity = { level = "deny", priority = -1 }
 perf = { level = "deny", priority = -1 }
 pedantic = { level = "deny", priority = -1 }
 cargo = { level = "deny", priority = -1 }
+nursery = { level = "allow", priority = 0 }
+allow_attributes = { level = "forbid", priority = 1 }
+multiple_crate_versions = { level = "allow", priority = 1 }
+
+[workspace.lints.cargo]
+correctness = { level = "deny", priority = -1 }
+suspicious = { level = "deny", priority = -1 }
+style = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+manual_readme = { level = "allow", priority = 1 }
 
 [workspace.dependencies]
 quick-xml = "0.42.0"
-jiff = { version = "0.2.37", default-features = false }
+jiff = { version = "0.2.43", default-features = false }
 
 # benchmarks
 criterion = "0.8.2"

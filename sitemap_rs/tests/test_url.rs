@@ -1,5 +1,3 @@
-extern crate core;
-
 use jiff::Zoned;
 use sitemap_rs::image::Image;
 use sitemap_rs::url::{ChangeFrequency, DEFAULT_PRIORITY, Link, Url};
