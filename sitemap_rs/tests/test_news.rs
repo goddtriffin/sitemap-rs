@@ -10,5 +10,5 @@ fn test_constructor_only_required_fields() {
             "Local Software Engineer, Todd, Finally Completes Project He Has Talked About For Years",
         ),
     );
-    assert!(!news.title.is_empty());
+    assert_ne!(news.title, "");
 }
